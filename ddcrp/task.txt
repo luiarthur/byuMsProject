@@ -1,0 +1,22 @@
+1) Read ddcrp: Blei Paper & Code
+2) Change sampling model in paper to what Dr. Dahl wants (shallot)
+3) Review Radford Neal 
+    a) Auxilliary Gibbs
+    b) Dahl's Code
+4) Want to supply distance matrix into code (not only function to calculate matrix)
+5) Sample from ddcrp: find or tweak from Beli's code
+6) Clean code: put parameters at the top of the code
+7) return cluster labels
+
+Trick to sample from prior:
+  P(pi|y) = P(y|pi)*P(pi) / P(y)
+  - So to sample from prior, just set P(y|pi) = 1
+
+#------
+
+1) Get the MC chain from Blei's code
+2) Code up Blei's stuff on my own
+#------
+
+1) See if the two Dahl's properties hold
+2) given a distance matrix, return partition

@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\usepackage{bm}
+\usepackage{mathtools}
+\def\wl{\par \vspace{\baselineskip}}
+\def\imply{\Rightarrow}
+
+\begin{document}
+\title{E[X|Z] \&  E[E[X|Z]] = E[X]}
+\author{Arthur Lui}
+\maketitle
+
+
+<<design,echo=F>>=
+  source("../../ex.R",chdir=T)
+
+  N <- 10000
+  x.1 <- x.gen(a=3,N=N)
+  ezj.1 <- EZ(n=3,a=3,d=ncol(x.1$EX),N=N)
+
+@  
+
+\section*{Model:}
+  \[ X|Z \sim MN(ZJ,U,V)\text{, where} U=\sigma_1 I \text{ and } V=\sigma_2I \]
+  \[ Z \sim IBP(\alpha) \]
+
+
+\section*{E[X] = E[E[X|Z]]:}
+  $E[X] = E[E[X|Z]] = E[ZJ] = E[Z]J$.\\
+  \wl\noindent
+  For $n=3$ and $\alpha=3$, 
+\[
+E[Z]^T= 
+<<label=tab1,echo=F,results=tex>>=
+  library(xtable)
+  tez <- t(ezj.1$EZ)
+  x=xtable(tez,align=rep("",ncol(tez)+1),digits=2)
+  print(x,floating=FALSE,tabular.environment="pmatrix",hline.after=NULL,
+        include.rownames=FALSE,include.colnames=FALSE)
+@  
+\imply
+E[Z]J = 
+<<label=tab1,echo=F,results=tex>>=
+  library(xtable)
+  ezj <-ezj.1$EZJ 
+  x=xtable(ezj,align=rep("",ncol(ezj)+1),digits=3)
+  print(x,floating=FALSE,tabular.environment="pmatrix",hline.after=NULL,
+        include.rownames=FALSE,include.colnames=FALSE)
+@  
+\approx 
+E[E[X|Z]] = 
+<<label=tab1,echo=F,results=tex>>=
+  library(xtable)
+  ex <-x.1$EX 
+  x=xtable(ex,align=rep("",ncol(ex)+1),digits=3)
+  print(x,floating=FALSE,tabular.environment="pmatrix",hline.after=NULL,
+        include.rownames=FALSE,include.colnames=FALSE)
+@ 
+= E[X]
+\]
+
+\section*{E[X|Z]:}
+  \[ E[X|Z] = ZJ \]
+  
+
+
+%\wl\wl\noindent
+%\section*{Summary:}
+
+ %\begin{enumerate}
+ %  \item
+ %  \item
+ %  \item
+ %        
+ %\end{enumerate}
+
+ 
+\end{document}
+
+

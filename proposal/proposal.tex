@@ -1,0 +1,154 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{mathtools}
+\usepackage{bm}
+\linespread{.95}
+\def\wl{\par \vspace{\baselineskip}}
+
+\begin{document}
+
+\begin{center}
+  \section*{Variable Selection for Random Partition Models}
+  {\normalsize \textbf{Arthur Lui~~~~~~~luiarthur@gmail.com~~~~~~~arthurll}}\\
+  {\footnotesize Mentor: David B. Dahl, Department of Statistics, Brigham Young University}
+\end{center}
+
+\section*{\normalsize Project Purpose}
+The purpose of this project is two-fold: 
+(1) Develop a novel statistical methodology for Bayesian nonparametrics,
+(2) Apply this methodology to predict secondary structure in proteins
+given their primary sequences.
+
+\section*{\normalsize Project Importance}
+  As noted by Mardia (2013), ``Proteins are the workhorses of all living systems, 
+  and protein bioinformatics deals with analysis of protein 
+  sequences (one dimensional) and structures (three dimensional).''
+  The three-dimensional shape of a protein determines its functionality.
+  Thus, understanding the relationship between the 
+  primary and secondary structure of a protein is a fundamental importance
+  in the biological sciences, facilitating the process
+  of drug discovery and the understanding of evolutionary biology.
+  The new statistical methodology that we will develop will help
+  model the relationship between primary and secondary structure of a protein.
+  In particular, we will explore the statistical merit of proposed biochemistry
+  variables in modeling secondary structure based on random partition
+  models.
+
+\section*{\normalsize Project Profile Body}
+  This section outlines the statistical approach we will pursue to accomplish
+  the two-fold project purpose outlined above.  A fundamental idea in our
+  approach is exploiting a latent clustering structure to borrow information
+  in parameter estimation.  A clustering structure can be encoded using
+  a partition $\pi_n = \{S_1,...,S_{q_n}\}$ of $\{1,...,n\}$.  A partition has the
+  following properties: (i) $S_i \neq \emptyset$ for $i=1,...,q_n$ (i.e.,
+  non-empty subsets), (ii) $S_i \cap S_j = \emptyset$ for $i \neq j$ (i.e.,
+  mutually exclusive subsets), and (iii) $\cup_{j=1}^q S_j = \{1,...,n\}$
+  (i.e., exhaustive subsets).  The number of subsets $q_n$ for a partition
+  $\pi_n$ can range from 1 (i.e., all items belong to the same subset) to
+  $n$ (i.e., each item is in a singleton subset).
+  It is sometimes convenient to represent a partition $\pi_n$ as a vector 
+  $\bm{c} = (c_1,...,c_n)$ of cluster labels, where $c_i = j$ if and only if 
+  $i \in S_j$, for $i=1,...,n$ and $j=1,...,q_n$.  The size of $\mathcal{F}_n$ 
+  grows exponentially in $n$ according to the Bell (1934) number.
+  A probability distribution over all partitions is discrete, 
+  but the size of the space makes exhaustive calculations impossible 
+  except for very small $n$.
+
+  The Chinese restaurant process (CRP) is the prototypical random partition model. 
+  The exchangeability of the CRP establishes that the
+  marginal probability that any two items $i$ and $k$ are clustered together is:
+  \begin{equation*}
+  \label{eq_uniform}
+  \text{pr}(c_i = c_k ) = \frac{1}{\alpha+1},
+  \end{equation*}
+  where $\alpha$ is a mass parameter governing the degree of clustering.
+  Note that this probability is uniform across all pairs $i$ and $k$.  The probability
+  mass function of a partition $\pi_n$ for the Chinese restaurant process
+  is:
+  \begin{equation*}
+  \label{eq_dpm}
+  p(\pi_n) = \prod_{S \in \pi_n} \alpha \Gamma(|S|) / \alpha^{(n)},
+  \end{equation*}
+  where $\alpha^{(n)} = \prod_{i=1}^n(\alpha+i-1)$ is the reciprocal of the
+  normalizing constant, $\Gamma(x)$ is the gamma function, and $|S|$ is
+  the number of items in subset $S$.
+
+  Dahl (2013) proposed a random partition distribution indexed by pairwise information.
+  He supposed that the prior information regarding clustering of $n$ items can be
+  expressed in terms of an $n \times n$ proximity matrix of elements $s_{ik}$
+  giving the proximity between items $i$ and $k$.  If pairwise information
+  regarding $i$ and $k$ is more readily expressed in terms of a distance
+  $d_{ik}$, then the proximity $s_{ik}$ can be expressed as a function of
+  $d_{ik}$, e.g., $s_{ik} = 1/d_{ik}$ or $s_{ik} = \max_{\forall ab}\{d_{ab}\} -
+  d_{ik}$.  The framework can use any proximity or distance metric such that $0 <
+  s_{ik} < \infty$ for all $i,k$.  Dahl (2013) defined a nonexchangeable random partition
+  distribution such that:
+  \begin{equation}
+  \label{eq_nonuniform}
+  s_{ik} \le s_{i'k'} \quad \implies \quad \text{pr}(c_i = c_k) \ \le \ \text{pr}(c_{i'} = c_{j'}).
+  \end{equation}
+  That is, the probability that items $i$ and $k$ cluster should be less
+  than that of items $i'$ and $k'$ if the proximity of $i$ and $k$ is less than
+  that of $i'$ and $k'$.
+
+  Rather than using a single covariate to define the proximities for parameter
+  estimation, the purpose of this ORCA-funded research is to investigate a random
+  partition model indexed by pairwise information that incorporates multiple
+  covariates.  The clustering underlying the parameter estimation can then be
+  influenced by several covariates.  We propose to investigate methodologies to
+  perform variable selection to find the important covariates and weight them for
+  optimal parameter estimation.
+
+  Consider again the protein secondary structure prediction problem, where amino
+  acids that have similar hydrophobicity may share similar parameter values.  We
+  hypothesize that having the clustering influenced by hydrophobicity will improve
+  the parameter estimation.  Likewise, polarity is another covariate that may be
+  related to the parameter estimation.  In all, we hypothesize that there are many
+  covariates (together with their interactions) that may be related to the
+  parameter estimation.  In our proposed method, we wish to cluster amino acids
+  according to multiple proximity measures (hydrophobicity, polarity, charge,
+  etc.), automatically selecting and weighting those that help in parameter
+  estimation.
+
+%  Using regression, we will obtain a weights for each distance matrix 
+%  for multiple covariates. The distance matrices for each of the covariates 
+%  will be the regressors in the regression. Using the weighted sum of the distance 
+%  matrices, we can then cluster proteins that have higher proximity, 
+%  or smaller distance, according to the new distance matrix.
+
+\section*{\normalsize Anticipated Academic Outcome}
+  The ultimate goal is to publish an article in a statistics journal. In the process of
+  doing so, I will present my research at the BYU's College of Physical and Mathematical Science
+  Spring Research Conference in 2014. I will also present my research 
+  at the Joint Statistical Meeting (JSM) in Boston in August 2014.
+
+\section*{\normalsize Qualifications}
+  My mentor, Dr. Dahl, is collaborating with other statisticians 
+  and biochemists on a long-term project developing Bayesian nonparametric 
+  methods for protein structure prediction.
+  I will be able to draw help from Dr. Dahl 
+  as his research emphasis is also on Bayesian nonparametrics.
+
+  I am a senior majoring in statistics. In addition to taking required 
+  statistics and math courses, I have also taken computer 
+  science and extra math courses to further develop my skills. 
+  I have also taken a molecular biology course and several chemistry 
+  courses, including organic chemistry. As such, I am able to read 
+  relevant material about biochemistry and gain sufficient 
+  understanding to conduct the proposed research.
+
+\section*{\normalsize Project Timetable}
+  \begin{tabular}{ll}
+    December 2013&Develop the initial methodology\\
+    January 2014&Implement the algorithm in Scala\\
+    March 2014&Present at CMPS Spring Research Conference\\
+    August 2-7, 2014&Present at JSM 2014 (Boston)\\
+    August 31, 2014&Submit an article in a statistics journal
+  \end{tabular}
+
+\section*{\normalsize Scholarly Sources}
+  \textbf{Schmidler, S. C., Liu, J. S., and Brutlag, D. L.} (2000), ``Bayesian segmentation of protein secondary structure,'' Journal of Computational Biology, 7, 233-248.\\
+  \textbf{Dahl, D. B., Li, Q. W., Vannucci, M., Joo, H., Tsai, J. W.} (2013), ``A Bayesian Model for Protein Secondary Structure Prediction,'' Proceedings of the ISI World Statistics Congress.\\
+  \textbf{Dahl, D. B., Joo, H., Tsai, J. W.} (2013), ``Partition Distributions Indexed by Pairwise Information,'' \textit{working paper}.\\
+  \textbf{Mardia, K. V.} (2013), ``Statistical approaches to three key challenges in protein structural bioinformatics''. Journal of the Royal Statistical Society: Series C (Applied Statistics), 62: 487–514.
+\end{document}

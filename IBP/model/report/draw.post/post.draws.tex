@@ -1,0 +1,108 @@
+%http://www.informatik.uni-freiburg.de/~frank/ENG/latex-course/latex-course-3/latex-course-3_en.html
+\documentclass{beamer}
+
+\usepackage{graphicx}
+\usepackage{textpos}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{color} % For my tc command
+\usepackage[labelformat=empty]{caption}
+%\usepackage{algorithmic} % Need to install texlive
+\def\wl{\par \vspace{\baselineskip}\noindent}
+\def\imp{\Rightarrow}
+\newcommand\tc[1]{\textcolor{red}{\textbf{#1}}}
+\def\dim#1#2#3{\underset{#1\times#2}{#3}}
+
+% Sorah Used This:
+\usepackage{xcolor}
+
+% See this for more themes and colors: http://www.hartwork.org/beamer-theme-matrix/
+\usepackage{beamerthemeHannover} % Determines the Theme
+\usecolortheme{seahorse}         % Determines the Color
+
+\title{Posterior Draws for Indian Buffet Process}
+%\logo{\includegraphics[width=1cm,height=1cm,keepspectration]{logo.png}}
+\author[Arthur Lui]{Arthur Lui}
+\institute[Brigham Young University]{
+  Department of Statistics\\
+  Brigham Young University
+}
+
+
+\begin{document}
+
+  \frame{\titlepage}
+  
+  \section{Model}
+    \frame{
+      \frametitle{Model}
+      \[  
+      \begin{array}{rcl}
+        \dim{n}{d}{X} & = & \dim{n}{k}{Z} \dim{k}{d}{A} + E \\
+                    Z & \sim  & IBP(\alpha) \\
+               A_{ij} & \sim  & N(0,\sigma_A = 1) \\
+               E_{ij} & \sim  & N(0,\sigma_X = 1) \\
+      \end{array}
+      \]
+    }
+
+  \section{Generate Data}  
+    \frame{
+      \frametitle{Set A}
+      \begin{center}
+        \includegraphics[scale=.5]{../../draw.post.out/a6by6.pdf}
+      \end{center}
+    }
+    \frame{
+      \frametitle{Set A}
+      \begin{center}
+        \includegraphics[scale=.5]{../../draw.post.out/A.pdf}
+      \end{center}
+    }
+
+    \frame{
+      \frametitle{Generate Z}
+      \begin{center}
+        \includegraphics[scale=.5]{../../draw.post.out/Z.pdf}
+      \end{center}
+    }
+    
+    \frame{
+      \frametitle{Generate X}
+      \begin{center}
+        \includegraphics[scale=.5]{../../draw.post.out/Y.pdf}
+      \end{center}
+    }
+
+  \section{Posteriors}
+    \frame{
+      \frametitle{Trace Plot for Number of Columns in Z}
+      \begin{center}
+        \includegraphics[scale=.4]{../../draw.post.out/traceplot.pdf}
+      \end{center}
+    }
+
+    \frame{
+      \frametitle{Posterior Estimate for Z}
+      \begin{center}
+        \includegraphics[scale=.5]{../../draw.post.out/postZ.pdf}
+      \end{center}
+    }
+
+    \frame{
+      \frametitle{Posterior Estimate for A}
+      \begin{center}
+        \includegraphics[scale=.5]{../../draw.post.out/postA.pdf}
+      \end{center}
+    }
+
+    \frame{
+      \frametitle{Posterior Estimate for A}
+      \begin{center}
+        \includegraphics[scale=.5]{../../draw.post.out/postA66.pdf}
+      \end{center}
+    }
+
+
+
+\end{document}  

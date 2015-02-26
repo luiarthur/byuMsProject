@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\usepackage{bm}
+\usepackage{mathtools}
+\def\wl{\par \vspace{\baselineskip}}
+
+\begin{document}
+\title{Expected Draws from IBP}
+\author{Arthur Lui}
+\maketitle
+
+
+<<design,echo=F>>=
+  source("../../expectations.R",chdir=T)
+  alpha <- c(1,3,5,7)
+  result <- foreach(i=1:length(alpha)) %dopar% doit(alpha[i],makepdf=T)
+@  
+
+\section*{Graphs:}
+  
+  \begin{center}
+    \includegraphics{alpha1.pdf} 
+    \includegraphics{alpha3.pdf} 
+    \includegraphics{alpha5.pdf} 
+    \includegraphics{alpha7.pdf} 
+  \end{center}
+
+
+\wl\wl\noindent
+\section*{Summary:}
+
+ \begin{enumerate}
+   \item The proportion of customers that try dish $k$  
+         is not affected for each $k$ as $\alpha$ increases, 
+         and decreases for each $k$ as $n$ increases.
+
+   \item The expected number of dishes taken by EACH customer $\approx \alpha$.
+
+   \item The proportion of dishes taken by each customer is not clear. 
+          But seems to follow a pattern.
+ \end{enumerate}
+
+ 
+\end{document}
+
+

@@ -1,0 +1,203 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage{textpos}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{color}
+\def\wl{\par \vspace{\baselineskip}}
+\def\tc{\textcolor}
+
+\title{Inference Using The Indian Buffet Process}
+\logo{\includegraphics[width=1cm,height=1cm,keepspectration]{/data/arthurll/Pictures/logo.png}}
+\usepackage{beamerthemeMadrid}
+\author[Arthur Lui]{Arthur L. Lui}
+\institute[Brigham Young University]{
+  Department of Statistics\\
+  Brigham Young University
+}
+
+\begin{document}
+
+  \begin{frame}
+    \titlepage
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Abstract}
+    The Indian buffet process (IBP) has recently been applied in various areas,
+    including biochemistry, economics, and sociology. The IBP, an extension of the
+    Chinese restaurant process, defines a prior distribution for latent feature
+    models, a class of models in which observations are the result of multiple
+    binary features. In this presentation, I will review the IBP and demonstrate
+    its effectiveness in recovering the latent (i.e.\ hidden) structure
+    responsible for generating observed data. Inference through Markov chain Monte
+    Carlo (MCMC) will be presented for a matrix normal latent feature model. I
+    will show the IBP's ability to unmix hidden sources from the observed data to
+    reveal latent structure, even when the number of hidden sources is unknown.
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Motivating Example}
+     Suppose you observe a matrix $\bm X_{n \times d}$ = \wl
+
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Lindsey} 
+           & \multicolumn{1}{c}{Lucy}
+           & \multicolumn{1}{c}{Conlan} 
+           & \multicolumn{1}{c}{Vladimir} \\ 
+         \cline{2-6}
+
+         Beethoven    & 18 & 24 & 28 & 20 & 25 \\ \cline{2-6}
+         Rachmaninoff & 29 & 27 & 26 & 24 & 29 \\ \cline{2-6}
+         Schumann     & 20 & 16 & 16 & 12 & 14 \\ \cline{2-6}
+       \end{tabular}
+
+       \wl\noindent
+       where $n=3$ and $d=5$.
+       \wl\noindent
+       You believe that some latent (hidden) structure is responsible for 
+       generating the observed matrix, $\bm X$. That is, $\bm X = \bm Z \bm A$,
+       where $\bm Z_{n \times k}$ is some binary feature matrix and 
+       $\bm A_{k \times d}$ is some weight matrix.
+
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Motivating Example}
+      Suppose that the latent variables $\bm Z$ and $\bm A$ are:\\ 
+        \wl
+        $\bm Z =$
+        \begin{tabular}{l|c|c|c|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           % These may represent time periods of music: 
+           % Baroque, Classical, Romantic, 20th Century, etc.
+           & \multicolumn{1}{c}{A} 
+           & \multicolumn{1}{c}{B}
+           & \multicolumn{1}{c}{C}
+           & \multicolumn{1}{c}{D}
+           & \multicolumn{1}{c}{E}
+           & \multicolumn{1}{c}{F}
+           & \multicolumn{1}{c}{G}
+           & \multicolumn{1}{c}{H} \\ 
+         \cline{2-9}
+
+         Beethoven    &1&1&1&1&1&0&0&0 \\ \cline{2-9}
+         Rachmaninoff &1&1&1&1&0&1&1&0 \\ \cline{2-9}
+         Schumann     &0&1&0&1&0&0&0&1 \\ \cline{2-9}
+       \end{tabular}
+       \wl
+       $\bm A =$
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Lindsey}
+           & \multicolumn{1}{c}{Lucy}
+           & \multicolumn{1}{c}{Conlan}
+           & \multicolumn{1}{c}{Vladimir} \\ 
+         \cline{2-6}
+
+         A & 6&2&6&4&3\\ \cline{2-6}
+         B & 6&7&9&1&4\\ \cline{2-6}
+         C & 1&4&4&3&7\\ \cline{2-6}
+         D & 3&5&2&6&6\\ \cline{2-6}
+         E & 2&6&7&6&5\\ \cline{2-6}
+         F & 9&4&2&5&5\\ \cline{2-6}
+         G & 4&5&3&5&4\\ \cline{2-6}
+         H &11&4&5&5&4\\ \cline{2-6}
+       \end{tabular}
+       
+       % Z_{ij} indicates whether composer i is in time period / genre j.
+       % A_{jk} is some weight matrix telling us how likely (out of 30) 
+       % is it for person k to time period / genre j.
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Results}
+  Posterior Mode for $\bm Z$ = 
+        \begin{tabular}{l|c|c|c|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           % These may represent time periods of music: 
+           % Baroque, Classical, Romantic, 20th Century, etc.
+           & \multicolumn{1}{c}{A} 
+           & \multicolumn{1}{c}{B}
+           & \multicolumn{1}{c}{C}
+           & \multicolumn{1}{c}{D}
+           & \multicolumn{1}{c}{E}
+           & \multicolumn{1}{c}{F}
+           & \multicolumn{1}{c}{G}
+           & \multicolumn{1}{c}{H} \\ 
+         \cline{2-9}
+
+         Beethoven    &1&1&        1&1&        1&\tc{red}1&        0&0 \\ \cline{2-9}
+         Rachmaninoff &1&1&        1&1&\tc{red}1&        1&        1&0 \\ \cline{2-9}
+         Schumann     &0&1&\tc{red}1&1&        0&        0&\tc{red}1&1 \\ \cline{2-9}
+       \end{tabular}
+
+  \wl
+  Posterior Mean for $\bm A$ = 
+       \begin{tabular}{l|r|r|r|r|r|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Lindsey}
+           & \multicolumn{1}{c}{Lucy}
+           & \multicolumn{1}{c}{Conlan}
+           & \multicolumn{1}{c}{Vladimir} \\ 
+         \cline{2-6}
+
+         A &3  (6)&5 (2)&5 (6)&3  (4)&5  (3)\\ \cline{2-6}
+         B &4  (6)&5 (7)&6 (9)&5  (1)&6  (4)\\ \cline{2-6}
+         C &3  (1)&2 (4)&4 (4)&0  (3)&4  (7)\\ \cline{2-6}
+         D &3  (3)&4 (5)&4 (2)&4  (6)&3  (6)\\ \cline{2-6}
+         E &3  (2)&3 (6)&4 (7)&4  (6)&5  (5)\\ \cline{2-6}
+         F &3  (9)&2 (4)&3 (2)&2  (5)&1  (5)\\ \cline{2-6}
+         G &9  (4)&4 (5)&2 (3)&4  (5)&4  (4)\\ \cline{2-6}
+         H &1 (11)&3 (4)&0 (5)&-1 (5)&-1 (4)\\ \cline{2-6}
+       \end{tabular}
+
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Results}
+    The product of the two matrices $=\bm{\hat X}=$ \\
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Lindsey} 
+           & \multicolumn{1}{c}{Lucy}
+           & \multicolumn{1}{c}{Conlan} 
+           & \multicolumn{1}{c}{Vladimir} \\ 
+         \cline{2-6}
+
+         Beethoven    &17.78&21.38&26.63&19.00&24.06 \\ \cline{2-6}
+         Rachmaninoff &26.32&25.65&28.99&23.33&27.60 \\ \cline{2-6}
+         Schumann     &18.90&17.59&16.81&12.87&15.41 \\ \cline{2-6}
+       \end{tabular}
+     \wl
+     The original $\bm X$ = \\
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Lindsey} 
+           & \multicolumn{1}{c}{Lucy}
+           & \multicolumn{1}{c}{Conlan} 
+           & \multicolumn{1}{c}{Vladimir} \\ 
+         \cline{2-6}
+
+         Beethoven    & 18 & 24 & 28 & 20 & 25 \\ \cline{2-6}
+         Rachmaninoff & 29 & 27 & 26 & 24 & 29 \\ \cline{2-6}
+         Schumann     & 20 & 16 & 16 & 12 & 14 \\ \cline{2-6}
+       \end{tabular}
+
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Conclusion}
+    In this instance, $\bm Z$ was recovered relatively accurately, but $\bm A$
+    was not. Nevertheless, the predicted $\bm{\hat X}$ matrix was similar to the
+    original $\bm X$ matrix.
+  \end{frame}
+
+\end{document}    

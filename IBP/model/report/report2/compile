@@ -1,0 +1,6 @@
+#!/usr/bin/env Rscript
+
+Sweave("report.rnw")
+system("pdflatex report.tex")
+system("./clean")
+system("firefox report.pdf &")

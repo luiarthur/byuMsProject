@@ -1,0 +1,47 @@
+#!/bin/bash
+# Goal: 
+#       0) Need a simple example
+#       1) Use IBF and distance dependent stuff  
+#       2) Find Application
+
+rm -f *.pdf
+
+# 1: Finished Reading
+# The Indian Buffet Process: An Introduction and Review
+wget http://mlg.eng.cam.ac.uk/pub/pdf/GriGha11.pdf -O Griffiths.pdf
+
+
+# 2: Finished Reading: Go thru algorithm
+# D. Gor¨ ur, F. J ¨ akel, and C. E. Rasmussen. A choice model with inﬁnitely many latent features ¨ .  
+# In Proceedings of the 23rd International Conference on Machine Learning (ICML 2006), pages
+# 361–368, New York, 2006. ACM Press
+wget http://www.ics.uci.edu/~dgorur/papers/choiceICML06.pdf -O Choice.pdf
+
+
+# 3:
+# Identifying Protein Complexes in High-Throughput Protein Interaction Screens Using an Infinite Latent Feature Model
+# Chu W, Ghahramani Z, Krause R, Wild DL 
+
+# 4: Haven't Read Yet
+wget http://cocosci.berkeley.edu/tom/papers/adclusnips.pdf -O judgement.pdf
+# A Nonparametric Bayesian Method for Inferring Features From Similarity Judgments
+# Psychology
+
+# 5: Haven't Read Yet
+wget http://ai.stanford.edu/~tadayuki/papers/miller-griffiths-jordan-nips09.pdf -O network.pdf
+# Social Network. Nonparametric Latent Feature Models for Link Prediction
+
+# 6: 
+wget http://www.cs.berkeley.edu/~jordan/papers/thibaux-jordan-aistats07.pdf -O betaIBP.pdf
+# Beta Process => IBP is like Dirichlet Process => CRP
+# Baseline:   B   ~  BP(c0,B0)
+# Categories: Aj  ~  BP(cj,B), for all j <= n
+# Documents:  Xij ~  BeP(Aj),  for all i <= nj
+
+#7:
+wget http://arxiv.org/pdf/1110.5454v2.pdf? -O ddibp.pdf
+# 2.1: The most concise definition of the IBP
+
+# Matrix Normal Distribution (Introduction)
+#http://books.google.com/books?id=PQOYnT7P1loC&pg=PA55&lpg=PA55&dq=matrix+normal+distribution+introduction&source=bl&ots=jHi-1c5QjJ&sig=2JY1H4Dbf1MwOKg7zJ4lr7n8D4U&hl=en&sa=X&ei=tHjxUqfcEcv-oQSDnIG4DA&ved=0CDQQ6AEwAQ#v=onepage&q=matrix%20normal%20distribution%20introduction&f=false
+firefox *.pdf &

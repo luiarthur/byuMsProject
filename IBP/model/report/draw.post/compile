@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pdflatex post.draws.tex
+rm *.aux *.log *.out *.snm *.toc
+firefox post.draws.pdf &

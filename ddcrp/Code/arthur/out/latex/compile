@@ -1,0 +1,7 @@
+#!/usr/bin/env Rscript
+
+system("./clean")
+Sweave("disprove.rnw")
+system("pdflatex disprove.tex")
+system("firefox disprove.pdf &")
+system("./clean")

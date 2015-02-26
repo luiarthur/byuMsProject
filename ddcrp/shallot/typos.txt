@@ -1,0 +1,9 @@
+p.1:
+1) G ~ DP(aG_0) => G ~ DP(G_0,a) to be consistent with Neal's paper.
+2) library("shallot") => library(shallot)
+3) "mcmc.parameters" doesn't work:
+    Error in mcmc.parameters(log.density.NAME = "jainneal.log.predictive.density") :
+    could not find function ".jengine"
+
+# Other problems:
+  my crp and his ddcrp (when set to crp) doesn't behave the same way.

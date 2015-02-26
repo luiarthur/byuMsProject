@@ -1,0 +1,61 @@
+CONTENTS
+
+Included in this distribution is matlab code to generate posterior samples for
+linear Gaussian and binary matrix factorization (noisy-or) Indian Buffet
+Process models.  Three different posterior sampling algorithms are provided:
+Gibbs, reversible jump Markov chain Monte Carlo (RJMCMC), and sequential
+importance sampling (SIS).  Only the Gibbs and SIS samplers are provided for
+the linear Gaussian IBP models.
+
+GETTING STARTED
+
+The 'ibp' root directory has the code for binary matrix factorization.  Open
+the file 'test.m' first.  This code shows how to run each of the samplers.  The
+'ibp/linear_gaussian_model' directory contains complimentary code for the
+linear gaussian IBP model.  
+
+APOLOGIES
+
+The code is very poorly documented.  Evidence of its usage will promote
+commenting and cleaning of the code by its authors.  
+
+FEEDBACK
+
+Please send bug reports, comments, and general feedback to fwood@gatsby.ucl.ac.uk.
+
+INDEMNIFICATION
+
+This code is provided as is.  The authors make no claims about its correctness.
+It almost certainly contains bugs.  Users beware!
+
+RESTRICTED USE
+
+Usage of this code is restricted to non-commercial research purposes.  Please
+contact fwood@gatsby.ucl.ac.uk to discuss commercial applications. 
+
+ACKNOWLEDGEMENT
+
+Code similar to this was used to generate the results in:
+
+@inproceedings{woodg06a,
+	author = {F. Wood and T.~L. Griffiths and Z. Ghahramani} ,
+	title = {A Non-Parametric {B}ayesian Method for Inferring Hidden Causes},
+	booktitle = {Proceedings of the 22nd Conference on Uncertainty in Artificial Intelligence },
+	pages = {536--543},
+	year = {2006}
+}
+
+@inproceedings{woodg06b,
+  author = 	 {F. Wood and T. L. Griffiths},
+  title = 	 {Particle Filtering for Nonparametric {B}ayesian Matrix Factorization},
+  booktitle = 	 {Advances in Neural Information Processing Systems},
+  year = 	 {2007},
+  pages = {to appear},
+  address = 	 {Cambridge, MA},
+  publisher =    {MIT Press},
+}
+
+We kindly request that you cite one or both of these papers if you make use of
+this code.
+
+COPYRIGHT 2008

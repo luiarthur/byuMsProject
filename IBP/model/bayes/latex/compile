@@ -1,0 +1,8 @@
+#!/usr/bin/env Rscript
+
+#system("cd ../; R CMD BATCH cars.R; cd latex")
+Sweave("springRC.rnw")
+system("pdflatex springRC.tex")
+system("rm *.tex *.log *.aux *.nav *.out *.toc *.snm")
+#system("firefox springRC.pdf &")
+system("~/chrome/opt/google/chrome/google-chrome --no-sandbox %U springRC.pdf &")

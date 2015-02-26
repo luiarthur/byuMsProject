@@ -1,0 +1,336 @@
+%http://www.informatik.uni-freiburg.de/~frank/ENG/latex-course/latex-course-3/latex-course-3_en.html
+\documentclass{beamer}
+
+\usepackage{graphicx}
+\usepackage{textpos}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{color} % For my tc command
+\usepackage[labelformat=empty]{caption}
+\def\wl{\par \vspace{\baselineskip}}
+\newcommand\tc[1]{\textcolor{red}{\textbf{#1}}}
+
+% See this for more themes and colors: http://www.hartwork.org/beamer-theme-matrix/
+\usepackage{beamerthemeHannover} % Determines the Theme
+\usecolortheme{seahorse}         % Determines the Color
+
+\title{Inference Using The Indian Buffet Process}
+\logo{\includegraphics[width=1cm,height=1cm,keepspectration]{/data/arthurll/Pictures/logo.png}}
+
+\author[Arthur Lui]{Arthur L. Lui}
+\institute[Brigham Young University]{
+  Department of Statistics\\
+  Brigham Young University
+}
+%Setting %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\begin{document}
+  
+  \frame{\titlepage}
+
+  \section{Introduction}
+  \begin{frame}
+  \frametitle{The Indian Buffet Process}
+    \begin{itemize}
+      %\item IBP has many applications
+      \item Extension of the Chinese restaurant process
+      \item Defines a distribution for sparse binary matrices
+      \item IBP effectively recovers latent structure responsible for generating 
+            observed data
+    \end{itemize}
+  \end{frame}
+
+  \section{Motivating Example}
+  \begin{frame}
+  \frametitle{Motivating Example}
+     Suppose you observe a matrix $\bm X_{n \times d}$ = \wl
+
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Mickey} 
+           & \multicolumn{1}{c}{Minnie}
+           & \multicolumn{1}{c}{Phil} 
+           & \multicolumn{1}{c}{Ryan} \\ 
+         \cline{2-6}
+
+         Hunger Games & 18 & 24 & 28 & 20 & 25 \\ \cline{2-6}
+         Ender's Game & 29 & 27 & 26 & 24 & 29 \\ \cline{2-6}
+         Hobbit       & 20 & 16 & 16 & 12 & 14 \\ \cline{2-6}
+       \end{tabular}
+
+       \wl\noindent
+       where $n=3$ and $d=5$.
+       \begin{itemize}
+         \item $\bm X = \bm Z \bm A$ \\
+         \item $\bm Z_{n \times k}$ is some binary feature matrix and 
+               $\bm A_{k \times d}$ is some weight matrix.
+       \end{itemize}
+  \end{frame}
+  
+  \begin{frame}
+  \frametitle{Motivating Example}
+      Suppose that the latent variables $\bm Z$ and $\bm A$ are:\\ 
+        \wl
+        $\bm Z =$
+        \begin{tabular}{l|c|c|c|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           % These may represent time periods of music: 
+           % Baroque, Classical, Romantic, 20th Century, etc.
+           & \multicolumn{1}{c}{A} 
+           & \multicolumn{1}{c}{B}
+           & \multicolumn{1}{c}{C}
+           & \multicolumn{1}{c}{D}
+           & \multicolumn{1}{c}{E}
+           & \multicolumn{1}{c}{F}
+           & \multicolumn{1}{c}{G}
+           & \multicolumn{1}{c}{H} \\ 
+         \cline{2-9}
+
+         Hunger Games &1&1&1&1&1&0&0&0 \\ \cline{2-9}
+         Ender's Game &1&1&1&1&0&1&1&0 \\ \cline{2-9}
+         Hobbit       &0&1&0&1&0&0&0&1 \\ \cline{2-9}
+       \end{tabular}
+       \wl
+       $\bm A =$
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Mickey}
+           & \multicolumn{1}{c}{Minnie}
+           & \multicolumn{1}{c}{Phil}
+           & \multicolumn{1}{c}{Ryan} \\ 
+         \cline{2-6}
+
+         A & 6&2&6&4&3\\ \cline{2-6}
+         B & 6&7&9&1&4\\ \cline{2-6}
+         C & 1&4&4&3&7\\ \cline{2-6}
+         D & 3&5&2&6&6\\ \cline{2-6}
+         E & 2&6&7&6&5\\ \cline{2-6}
+         F & 9&4&2&5&5\\ \cline{2-6}
+         G & 4&5&3&5&4\\ \cline{2-6}
+         H &11&4&5&5&4\\ \cline{2-6}
+       \end{tabular}
+       
+       % Z_{ij} indicates whether composer i is in time period / genre j.
+       % A_{jk} is some weight matrix telling us how likely (out of 30) 
+       % is it for person k to time period / genre j.
+  \end{frame}
+
+  \begin{frame}
+  % This frame is a repeat of the previous with subs for ABC..H
+  \frametitle{Motivating Example}
+      Suppose:
+        \wl
+        $\bm Z =$
+        \begin{table}
+        \resizebox{\columnwidth}{!}{%
+          \begin{tabular}{l|c|c|c|c|c|c|c|c|}
+            \multicolumn{1}{c}{}
+              % These may represent time periods of music: 
+              % Baroque, Classical, Romantic, 20th Century, etc.
+              & \multicolumn{1}{c}{Kids} 
+              & \multicolumn{1}{c}{Action}
+              & \multicolumn{1}{c}{Future}
+              & \multicolumn{1}{c}{YA}
+              & \multicolumn{1}{c}{Female}
+              & \multicolumn{1}{c}{Space}
+              & \multicolumn{1}{c}{Aliens}
+              & \multicolumn{1}{c}{Wizards} \\ 
+            \cline{2-9}
+
+            Hunger Games &1&1&1&1&1&0&0&0 \\ \cline{2-9}
+            Ender's Game &1&1&1&1&0&1&1&0 \\ \cline{2-9}
+            Hobbit       &0&1&0&1&0&0&0&1 \\ \cline{2-9}
+         \end{tabular}%
+       }
+       \end{table}
+       \wl
+       $\bm A =$
+       \begin{table}
+       \tiny{%  
+         \begin{tabular}{l|c|c|c|c|c|}
+           \multicolumn{1}{c}{}
+             & \multicolumn{1}{c}{Arthur} 
+             & \multicolumn{1}{c}{Mickey}
+             & \multicolumn{1}{c}{Minnie}
+             & \multicolumn{1}{c}{Phil}
+             & \multicolumn{1}{c}{Ryan} \\ 
+           \cline{2-6}
+
+           Kids   & 6&2&6&4&3\\ \cline{2-6}
+           Action & 6&7&9&1&4\\ \cline{2-6}
+           Future & 1&4&4&3&7\\ \cline{2-6}
+           YA     & 3&5&2&6&6\\ \cline{2-6}
+           Female & 2&6&7&6&5\\ \cline{2-6}
+           Space  & 9&4&2&5&5\\ \cline{2-6}
+           Aliens & 4&5&3&5&4\\ \cline{2-6}
+           Wizard &11&4&5&5&4\\ \cline{2-6}
+         \end{tabular}%
+       }  
+      \end{table} 
+       % This section is a repeat of the previous
+  \end{frame}
+
+
+
+  \section{The Indian Buffet Process}
+  \begin{frame}
+  \frametitle{Left Ordered Form}
+    $lof(\cdot)$ is a many-to-one function.
+
+    \begin{figure}
+      \centering
+      \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=.4\linewidth]{pics/Z.pdf}
+        \caption{M}
+      \end{minipage}% The percent keeps the two graphs on same line
+      \begin{minipage}{.5\textwidth}
+        \centering
+        \includegraphics[width=.4\linewidth]{pics/lofZ.pdf}
+        \caption{lof(M)}
+      \end{minipage}
+    \end{figure}  
+
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Indian Buffet Process}
+    \begin{center}\begin{figure}
+      \includegraphics[width=7cm]{pics/draw1.pdf}
+    \end{figure}\end{center}  
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Indian Buffet Process}
+    \begin{center}\begin{figure}
+      \includegraphics[width=7cm]{pics/draw2.pdf}
+    \end{figure}\end{center}  
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Indian Buffet Process}
+    \begin{center}\begin{figure}
+      \includegraphics[width=7cm]{pics/exp.pdf}
+    \end{figure}\end{center}  
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Indian Buffet Process Prior}
+    \[
+      P([\bm Z]) = \frac{\alpha^{K_+}}{\prod_{h=1}^{2^{N-1}}K_h!} e^{-\alpha H_N} 
+                   \prod_{k=1}^{K_+} \frac{(N-m_k)!(m_k-1)!}{N!}
+    \]
+  \end{frame}
+
+  \begin{frame}
+  \frametitle{Model}
+    \[ \underset{n \times d}{\bm X} | \bm{Z}, \bm{A} \sim \text{MN}(\bm{ZA,U,V})\]
+    \[ \underset{n \times k}{\bm Z} \sim \text{IBP}(\alpha) \]
+    \[ \underset{k \times d}{\bm A} \sim \text{MN}(\bm{M,I_k,I_d})\]
+    where $\bm X \sim \text{MN}(\bm{M,U,V}) \iff 
+          \text{vec}(\bm{X}) \sim 
+          \text{N}_{np}(\text{vec}(\bm M),\bm V \otimes \bm U)$
+  \end{frame}
+
+
+  \section{Results}
+  \begin{frame}
+  \frametitle{Results}
+  Posterior Mode for $\bm Z$ = 
+        \begin{tabular}{l|c|c|c|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           % These may represent time periods of music: 
+           % Baroque, Classical, Romantic, 20th Century, etc.
+           & \multicolumn{1}{c}{A} 
+           & \multicolumn{1}{c}{B}
+           & \multicolumn{1}{c}{C}
+           & \multicolumn{1}{c}{D}
+           & \multicolumn{1}{c}{E}
+           & \multicolumn{1}{c}{F}
+           & \multicolumn{1}{c}{G}
+           & \multicolumn{1}{c}{H} \\ 
+         \cline{2-9}
+
+        Hunger Games &1&1&   1&1&   1&\tc1&   0&0 \\ \cline{2-9}
+        Ender's Game &1&1&   1&1&\tc1&   1&   1&0 \\ \cline{2-9}
+        Hobbit       &0&1&\tc1&1&   0&   0&\tc1&1 \\ \cline{2-9}
+
+       \end{tabular}
+
+  \wl
+  Posterior Mean for $\bm A$ = \\ \wl
+       \begin{tabular}{l|r|r|r|r|r|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Mickey}
+           & \multicolumn{1}{c}{Minnie}
+           & \multicolumn{1}{c}{Phil}
+           & \multicolumn{1}{c}{Ryan} \\ 
+         \cline{2-6}
+
+         A &3  (6)&5 (2)&5 (6)&3  (4)&5  (3)\\ \cline{2-6}
+         B &4  (6)&5 (7)&6 (9)&5  (1)&6  (4)\\ \cline{2-6}
+         C &3  (1)&2 (4)&4 (4)&0  (3)&4  (7)\\ \cline{2-6}
+         D &3  (3)&4 (5)&4 (2)&4  (6)&3  (6)\\ \cline{2-6}
+         E &3  (2)&3 (6)&4 (7)&4  (6)&5  (5)\\ \cline{2-6}
+         F &3  (9)&2 (4)&3 (2)&2  (5)&1  (5)\\ \cline{2-6}
+         G &9  (4)&4 (5)&2 (3)&4  (5)&4  (4)\\ \cline{2-6}
+         H &1 (11)&3 (4)&0 (5)&-1 (5)&-1 (4)\\ \cline{2-6}
+       \end{tabular}
+
+  \end{frame}
+  
+
+  \begin{frame}
+  \frametitle{Results}
+    The product of the two matrices $\bm{\hat{Z}}\bm{\hat{A}}=\bm{\hat X}=$ \\
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Mickey} 
+           & \multicolumn{1}{c}{Minnie}
+           & \multicolumn{1}{c}{Phil} 
+           & \multicolumn{1}{c}{Ryan} \\ 
+         \cline{2-6}
+
+         Hunger Games &17.78&21.38&26.63&19.00&24.06 \\ \cline{2-6}
+         Ender's Game &26.32&25.65&28.99&23.33&27.60 \\ \cline{2-6}
+         Hobbit       &18.90&17.59&16.81&12.87&15.41 \\ \cline{2-6}
+       \end{tabular}
+     \wl
+     The original $\bm X$ = \\
+       \begin{tabular}{l|c|c|c|c|c|}
+         \multicolumn{1}{c}{}
+           & \multicolumn{1}{c}{Arthur} 
+           & \multicolumn{1}{c}{Mickey} 
+           & \multicolumn{1}{c}{Minnie}
+           & \multicolumn{1}{c}{Phil} 
+           & \multicolumn{1}{c}{Ryan} \\ 
+         \cline{2-6}
+
+         Hunger Games & 18 & 24 & 28 & 20 & 25 \\ \cline{2-6}
+         Ender's Game & 29 & 27 & 26 & 24 & 29 \\ \cline{2-6}
+         Hobbit       & 20 & 16 & 16 & 12 & 14 \\ \cline{2-6}
+       \end{tabular}
+  \end{frame}
+
+
+  \section{Future}
+  \begin{frame}
+  \frametitle{Future}
+    \begin{itemize}
+      \item $\bm Z$ was recovered relatively accurately
+      \item $\bm A$ was not
+      \item $\bm{\hat X} \approx \bm X$ 
+      %\item Cross Validate to obtain features
+      \item Distance-dependent IBP
+      \item Prediction
+    \end{itemize}
+
+  \end{frame}
+
+\end{document}    

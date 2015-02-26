@@ -1,0 +1,929 @@
+%\documentclass[manuscript]{biometrika}
+%\documentclass[lineno]{biometrika}
+\documentclass[lineno]{biometrika-dbd}
+
+\usepackage{amsmath}
+
+%% Please use the following statements for
+%% managing the text and math fonts for your papers:
+\usepackage{times}
+%\usepackage[cmbold]{mathtime}
+\usepackage{bm}
+\usepackage{natbib}
+\usepackage{subcaption}
+
+\usepackage[plain,noend]{algorithm2e}
+
+\makeatletter
+\renewcommand{\algocf@captiontext}[2]{#1\algocf@typo. \AlCapFnt{}#2} % text of caption
+\renewcommand{\AlTitleFnt}[1]{#1\unskip}% default definition
+\def\@algocf@capt@plain{top}
+\renewcommand{\algocf@makecaption}[2]{%
+  \addtolength{\hsize}{\algomargin}%
+  \sbox\@tempboxa{\algocf@captiontext{#1}{#2}}%
+  \ifdim\wd\@tempboxa >\hsize%     % if caption is longer than a line
+    \hskip .5\algomargin%
+    \parbox[t]{\hsize}{\algocf@captiontext{#1}{#2}}% then caption is not centered
+  \else%
+    \global\@minipagefalse%
+    \hbox to\hsize{\box\@tempboxa}% else caption is centered
+  \fi%
+  \addtolength{\hsize}{-\algomargin}%
+}
+\makeatother
+
+%%% User-defined macros should be placed here, but keep them to a minimum.
+\usepackage{etoolbox}
+    \newtoggle{draft}
+    \toggletrue{draft}
+    \togglefalse{draft}
+	\newcommand{\draft}[1]{\iftoggle{draft}{#1}{}}
+\usepackage{url}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{booktabs}
+%/\usepackage[thinlines]{easytable}
+%\usepackage{ifthen}
+%\usepackage[show]{r2r}
+%\usepackage{soul}
+
+\newcommand{\partition}{\ensuremath{\pi}}
+\newcommand{\mass}{\alpha}
+\newcommand{\given}{\mid}
+\newcommand{\sizeof}[1]{| #1 |}
+\newcommand{\I}[1]{\ensuremath{\text{\textnormal{I}}\{#1\}}}
+\newcommand{\redact}[1]{}
+\newcommand{\todo}[1]{{\color{red} #1}}
+\newcommand{\DBD}[1]{\draft{{\color{red} DBD: #1}}}
+
+% Not needed in production
+%\draft{
+\usepackage{color}
+\usepackage[absolute]{textpos}
+\setlength{\TPHorizModule}{1in}
+\setlength{\TPVertModule}{\TPHorizModule}
+\textblockorigin{0in}{0in} % start everything at the top-left corner
+%}
+
+\AtBeginDocument{
+  \DeclareGraphicsExtensions{.png,.jpg,.pdf}
+  \graphicspath{{../figures/}}
+}
+
+\begin{document}
+
+\jname{Biometrika}
+%% The year, volume, and number are determined on publication
+\jyear{2013}
+\jvol{100}
+\jnum{1}
+%% The \doi{...} and \accessdate commands are used by the production team
+%\doi{10.1093/biomet/asm023}
+\accessdate{Advance Access publication on DAY MONTH YEAR}
+\copyrightinfo{\Copyright\ 2013 Biometrika Trust\goodbreak {\em Printed in Great Britain}}
+
+%% These dates are usually set by the production team
+\received{March 2013}
+\revised{MONTH YEAR}
+
+%% The left and right page headers are defined here:
+\markboth{David B.\ Dahl, Hyun Joo, \and Jerry W.\ Tsai}{Partition Distributions Indexed by Pairwise Information}
+
+%% Here are the title, author names and addresses
+\title{Partition Distributions Indexed by Pairwise Information}
+
+\author{DAVID B.\ DAHL}
+\affil{Department of Statistics, Brigham Young University, Provo, Utah 84602, U.S.A. \email{dahl@stat.byu.edu}}
+
+\author{HYUN JOO}
+\affil{Department\ of Chemistry, University of the Pacific, Stockton, California 95211, U.S.A. \email{hjoo@pacific.edu}}
+
+\author{JERRY W.\ TSAI}
+\affil{Department\ of Chemistry, University of the Pacific, Stockton, California 95211, U.S.A. \email{jtsai@pacific.edu}}
+
+\maketitle
+%{\renewcommand{\baselinestretch}{1} \maketitle }
+
+%\draft{
+\begin{textblock}{8}(6.5,1.2)
+\todo{Revision: 2013-06-10}
+\end{textblock}
+%}
+
+\begin{abstract}
+We propose a random partition distribution indexed by pairwise information such
+that items which are ``close'' to each other are more likely to be clustered
+together.  In contrast, the Dirichlet process induces a partition distribution
+in which the probability that an item is clustered with another is uniform
+across all items.  Our proposed distribution is a natural extension of the
+Chinese restaurant process.  We show that standard Bayesian nonparametric
+models are readily modified to use our random partition distribution based on
+pairwise information.  The properties of our distribution are explored.
+Applying our distribution as prior clustering distributions in a model for
+protein structure prediction, we find that the methods incorporating pairwise
+information substantially improve predictive accuracy.
+\end{abstract}
+
+\begin{keywords}
+Bayesian nonparametrics;
+Clustering method;
+Dirichlet process mixture model;
+Non-exchangeable prior;
+Protein structure prediction;
+Random partition model.
+\end{keywords}
+
+\section{Introduction}
+
+Let $p(\partition_n)$ denote a probability distribution for a random partition
+$\partition_n = \{S_1,\ldots,S_{q_n}\}$ of $\{1,\ldots,n\}$.  Popular models for
+$p(\partition_n)$ include product partition models
+\citep[see][]{hart:1990,barr:hart:1992}, species sampling models
+\citep[see][]{pitm:1995,pitm:yor:1997}, and model-based clustering
+\citep{rich:gree:1997,fral:raft:2002}.  Others include those of
+\citet{pitm:2003} and \citet{lijo:mena:prns:2005}.  These models are
+exchangeable with respect to permutations of the indices of the items, and many
+of them are reviewed by \citet{quin:2006} and \citet{lau:gree:2007}. These
+random probability models are routinely used in nonparametric Bayesian
+analysis.
+
+Exchangeable probability models for partitions have many attractive properties
+and mathematical elegance, yet there are severe constraints on such models
+\citep{leej:muel:trip:quin:2010}.  The aim of this paper is to explore random
+probability models for partitions that utilize available pairwise information
+to influence the clustering of the items.  Our models are, therefore,
+explicitly non-exchangeable.  The use of pairwise distances is common in many
+\emph{ad hoc} clustering algorithms (e.g., $k$-means and hierarchical
+clustering).  Our method provides a means to incorporate this type of
+information in nonparametric models and model-based clustering procedures.  We
+show how to utilize this new distance-based random partition distribution as a
+prior clustering distribution in Bayesian nonparametric models, thus achieving
+a nonparametric framework that has both distance-based and model-based
+clustering features.
+
+Simultaneous work has developed other nonexchangeable probability models for
+Bayesian nonparametric methods
+\citep[e.g.,][]{park:duns:2007,shah:neal:2007,muel:quin:rosn:2008}. A common
+thread is the use of a random probability for partitions influenced \textit{a
+priori} by covariates.  These methods are reviewed by \citet{muel:quin:2008}.
+\citet{park:duns:2007} and \citet{shah:neal:2007} include clustering covariates
+as part of an augmented response vector to obtain a prior partition model for
+inference on the response data.  \citet{park:duns:2007} build on product
+partition models and focus on continuous covariates treated as random
+variables, whereas \citet{shah:neal:2007} use the Dirichlet process as the
+random partition and model a categorical response with logistic regression.
+\citet{muel:quin:2008} also build on product partition models and can
+accommodate both continuous and discrete covariates. In their simulation study
+of several of these approaches, \citet{muel:quin:2008} found no dominant method
+and suggest choosing among them based on the inferential goals.  Our approach
+in this paper is unique, however, being tailored for pairwise distances,
+providing two methods to incorporate distance-based similarity information in
+both nonparametric models and model-based clustering procedures.  Our framework
+is general in that any distance metric (defined on continuous, discrete, or
+mixed covariates) can be used.  We demonstrate our proposal in the context of
+protein structure prediction and show that our methodology substantially
+improves predictive accuracy.
+
+%  \item Blei, Frazier (2011): \textit{Distance dependent Chinese restaurant processes}
+%  \item M\"uller, Quintana, Rosner (2011), Le\'on Novelo, et.\ al.\ (2011): Product partition model with regression on covariates
+%  \item Guindani, et. al.\ (2011): Generalized Ottawa Sequences
+%  \item Rodriguez, et.\ al. (2010), Chung, Dunson (2009): Probit stick breaking
+%  \item Park, Dunson (2010): \textit{Bayesian Generalized Product Partition Model}
+%  \item Dunson, Pillai, Park (2007): \textit{Bayesian density regression} (Weighted mixture of DP)
+%  \item ``Mixture of Experts'': {\scriptsize Models with covariate-dependent weights}
+
+
+\redact{
+The paper is organized as follows.  The probability distribution on
+partitions that is induced by the Dirichlet process is described in Section
+\ref{sec_dp}.  In Section \ref{sec_attraction} we show how to modify the usual
+Dirichlet process algorithms to yield the Attraction distribution for a
+distance-based probability distribution on partitions.  The Affinity
+distribution --- an alternative distance-based probability distribution
+on partitions --- is described in Section \ref{sec_affinity}.  In Section
+\ref{sec_properties}, we explore the properties of the proposed distributions
+and show that a new class of Bayesian nonparametric models is available when
+using these distributions as a prior clustering distribution.  The method is
+illustrated in Section \ref{sec_mobility} in an example of protein structure
+prediction and is shown to be substantially better than the leading alternative.
+We conclude in Section \ref{sec_conclusion} by discussing computational
+efficiency, other applications, and extensions of the proposed methodology.
+}
+
+\section{Chinese Restaurant Process}
+\label{sec_cr}
+
+\subsection{Notation}
+\label{sec_notation}
+
+Our proposed partition distribution indexed by pairwise information is an
+adaptation of the partition distribution of the Chinese restaurant process.  We
+lay the groundwork for our distribution by introducing some notation, defining
+the Chinese restaurant process, and exploring some of its properties.
+
+A partition $\partition_n = \{S_1,\ldots,S_{q_n}\}$ of $\{1,\ldots,n\}$ has the
+following properties: (i) $S_i \not= \emptyset$ for $i=1,\ldots,q_n$ (i.e.,
+non-empty subsets), (ii) $S_i \cap S_j = \emptyset$ for $i \not= j$ (i.e.,
+mutually exclusive subsets), and (iii) $\cup_{j=1}^q S_j = \{1,\ldots,n\}$
+(i.e., exhaustive subsets).  The number of subsets $q_n$ for a partition
+$\partition_n$ can range from 1 (i.e., all items belong to the same subset) to
+$n$ (i.e., each item is in a singleton subset).  Let $\mathcal{F}_n$ denote all
+possible partitions of $\{1,\ldots,n\}$.  It is sometimes convenient to
+represent a partition $\partition_n$ as a vector $\bm{c} = (c_1,\ldots,c_n)$ of
+cluster labels, where $c_i = j$ if and only if $i \in S_j$, for $i=1,\ldots,n$
+and $j=1,\ldots,q_n$.  The size of $\mathcal{F}_n$ grows exponentially in $n$
+according to the \citet{bell:1934} number.  A probability distribution over
+$\mathcal{F}_n$ is discrete, but the size of the space makes exhaustive
+calculations impossible except for very small $n$.
+
+\subsection{Sequentially Seating Customers using the Chinese Restaurant Process}
+\label{sec_cr_sequential}
+
+The Chinese restaurant process is a discrete-time stochastic process on the
+positive integers described metaphorically as sequentially seating customers of
+a restaurant at one of an infinite number of tables, each of infinite capacity.
+For generality and the later exposition of our proposed distribution, we
+describe the Chinese restaurant process where the order in which customers are
+seated is not necessarily their order in the dataset.  That is, there is a
+permutation $\bm{\sigma} = (\sigma_1,\ldots,\sigma_n)$ of the integers
+$\{1,\ldots,n\}$ giving the sequence in which the $n$ customers are seated at
+the restaurant, where the $i^{th}$ customer seated is $\sigma_i$ who has
+cluster label $c_{\sigma_i}$.  The inverse is $\bm{\sigma}^{-1} =
+(\sigma_1^{-1},\ldots,\sigma_n^{-1})$, where $\sigma_i^{-1}$ gives the order in
+which customer $i$ is seated.  For example, if $\bm{\sigma} = (4,2,1,3)$, then
+$\bm{\sigma}^{-1} = (3,2,4,1)$.
+
+At time $i=1$, the first customer $\sigma_1$ in the permutation $\bm{\sigma}$
+is seated at a table.  At time $i$, customer $\sigma_i$ is seated at an empty
+table with probability $\mass / (\mass + i - 1)$ or at the table of an existing
+customer with probability $(i-1) / (\mass + i -1 )$.  Further, the probability
+of seating with each existing customer is uniform. After seating all $n$
+customers, there are $q_n$ occupied tables and each table represents a subset
+$S$ in the random partition $\partition_n = \{S_1,\ldots,S_q\}$.  In the
+context of clustering, we will refer to customers as \emph{items}, tables as
+\emph{clusters}, and the seating of the entire restuarant as the
+\emph{clustering}.
+
+The probability mass
+function of the joint distribution of a cluster label vector $\bm{c}$, given
+the permutation $\bm{\sigma}$, is the product of increasing conditionals:
+\begin{equation}
+\label{eq_dpm_ppf}
+p(\bm{c} \given \bm{\sigma}) = \prod_{i=1}^n p(c_{\sigma_i} \given c_{\sigma_1}, \ldots, c_{\sigma_{i-1}})
+\end{equation}
+where:
+\begin{equation}
+\label{eq_dpm_ppf_component}
+\begin{split}
+p(c_{\sigma_i} \given c_{\sigma_1},\ldots,c_{\sigma_{i-1}}) 
+  & \ = \ \text{pr}(c_{\sigma_i} = j \given c_{\sigma_1},\ldots,c_{\sigma_{i-1}}) \\
+  & \ \propto \
+\begin{cases}
+\ \sum_{k=1}^{i-1} \ \text{I}\{c_{\sigma_k} = j\} & \text{for\
+\ } j=1,\ldots,q_{i-1} \\
+\ \ \mass & \text{for\ \ } j = q_{i-1} + 1,
+\end{cases}
+\end{split}
+\end{equation}
+where the normalizing constant is $1/( \mass + i - 1 )$ and $q_{i-1}$ is the
+number of occupied clusters after placing the first $i-1$ items, and
+$\text{I}\{ \cdot \}$ is the indicator function, so $\sum_{k=1}^{i-1}
+\text{I}\{c_{\sigma_k} = j\}$ is the number of items already placed at
+cluster $j$ before time $i$.  Note that the probability that item $\sigma_i$ is
+assigned to a new cluster is $\mass / ( \mass + i - 1)$.
+
+The resulting partition distribution is often called the Ewens-Pitman
+distribution \citep{ewens:1972,pitm:1995,pitm:1996}.  The metaphor to a Chinese
+restaurant first appears in \citet[page 91-92]{aldo:1985} and is credited to
+Jim Pitman and Lester E.\ Dubins.  This distribution is the allocation
+distribution of the Dirichlet process \citep{ferg:1973}, which is commonly used
+in Bayesian nonparametric models.
+
+\subsection{Properties of the Chinese Restaurant Process}
+\label{sec_cr_exchangeability}
+
+Note that the allocation probabilities of new items to existing clusters in the
+Chinese restaurant process depend only on the number of items already assigned
+at each cluster.  Therefore, the Chinese restaurant process is exchangeable
+\citep{pitm:1995}; for any cluster label vector $\bm{c}$ and permutation
+$\bm{\sigma}$, the probability of an arbitrary permutation $\bm{c}^\ast$ of the
+elements of $\bm{\sigma}$ is equal to the probability of $\bm{\sigma}$.
+Further, the probability of any cluster label vector $\bm{c}$ --- or,
+equivalently, any partition $\partition_n$ --- is unaffected by the order
+$\bm{\sigma}$ in which the items are assigned.  Formally, for two permutations
+$\bm{\sigma}^{(1)}$ and $\bm{\sigma}^{(2)}$ among all possible $n!$
+permutations and any partition $\partition_n$, we have:
+\begin{equation}
+\label{eq_permutation_invariance}
+p(\partition_n \given \bm{\sigma}^{(1)}) = p(\partition_n \given \bm{\sigma}^{(2)}).
+\end{equation}
+We can thus drop the conditioning on the permutation $\bm{\sigma}$ and write
+simply $p(\bm{c})$ or $p(\partition_n)$.  Exchangeability establishes that the
+marginal probability that any two items $i$ and $k$ are clustered together is:
+\begin{equation}
+\label{eq_uniform}
+\text{pr}(c_i = c_k ) = \frac{1}{\mass+1},
+\end{equation}
+and this probability is uniform across all pairs $i$ and $k$.  The probability
+mass function of a partition $\partition_n$ for the Chinese restaurant process
+is:
+\begin{equation}
+\label{eq_dpm}
+p(\partition_n) = \prod_{S \in \partition_n} \mass \Gamma(\sizeof{S}) \Biggg/ \mass^{(n)},
+\end{equation}
+where $\mass^{(n)} = \prod_{i=1}^n(\mass+i-1)$ is the reciprocal of the
+normalizing constant, $\Gamma(x)$ is the gamma function, and $\sizeof{S}$ is
+the number of items in subset $S$.
+
+The Chinese restaurant process is also consistent in the following sense.
+Consider two distributions of the partition $\partition_{n}$ of the $n$ items:
+1.\ The distribution $p_1$ described by (\ref{eq_dpm}), and 2.\ The
+distribution $p_2$ obtained by marginalizing the distribution of the partition
+$\partition_{n+1}$ of $n+1$ items in (\ref{eq_dpm}) over item $n+1$.  For the
+Chinese restaurant process, these two distributions $p_1$ and $p_2$ are the
+same and we say that the Chinese restaurant process is also consistent.
+
+The mass parameter $\mass$ governs the probability of opening a new cluster
+and, therefore, the distribution of the total number $q_n$ of occupied clusters
+after assigning $n$ items.  Specifically:
+\begin{equation}
+\label{eq_dist_number_of_clusters}
+\text{pr}(q_n = k) = \frac{ \mass^k \sizeof{s(n,k)} }{ \mass^{(n)} } \hspace{3ex} \text{for} \ k=1,\ldots,n,
+\end{equation}
+where $s(n,k)$ is the Stirling number of the first kind counting the number of
+arrangments of $n$ objects into $k$ non-empty circular permutations.  Further,
+\citet{arra2003} shows that:
+\begin{equation}
+\label{eq_moments_number_of_clusters}
+\text{E}(q_n) = \sum_{i=1}^n \frac{\mass}{\mass+i-1} \hspace{3ex} \text{and} \hspace{3ex}
+\text{var}(q_n) = \mass \sum_{i=1}^n \frac{i-1}{(\mass+i-1)^2}.
+\end{equation}
+The Chinese restaurant process is consistent across dimensions in the sense
+that the partition distribution of the first $n-1$ items obtained by removing
+item $n$ from the random partition is the same as the partition distribution at
+time $n-1$ \citep[page 92]{aldo:1985}.
+
+\section{Nonexchangeable Partition Distributions Indexed by Pairwise Information}
+\label{sec_proposal}
+
+\subsection{Pairwise Information as Distances or Proximities}
+\label{sec_proposal_proximities}
+
+We proposed a random partition distribution indexed by pairwise information.
+We suppose that the prior information regarding clustering of $n$ items can be
+expressed in terms of an $n \times n$ proximity matrix of elements $s_{ik}$
+giving the proximity between items $i$ and $k$.  If pairwise information
+regarding $i$ and $k$ is more readily expressed in terms of a distance
+$d_{ik}$, then the proximity $s_{ik}$ can be expressed as a function of
+$d_{ik}$, e.g., $s_{ik} = 1/d_{ik}$ or $s_{ik} = \max_{\forall ab}\{d_{ab}\} -
+d_{ik}$.  Our framework can use any proximity or distance metric such that $0 <
+s_{ik} < \infty$ for all $i,k$.
+
+Recall that exchangeability imposes uniform probabilities in (\ref{eq_uniform})
+on all pairs of items.  In the presence of proximity or distance information,
+exchangeability is too limiting.  We desire a nonexchangeable random partition
+distribution such that:
+\begin{equation}
+\label{eq_nonuniform}
+s_{ik} \le s_{i'k'} \quad \implies \quad \text{pr}(c_i = c_k) \ \le \ \text{pr}(c_{i'} = c_{j'}).
+\end{equation}
+That is, the probability that items $i$ and $k$ cluster should be less
+than that of items $i'$ and $k'$ if the proximity of $i$ and $k$ is less than
+that of $i'$ and $k'$.
+
+\subsection{Attractions from Proximities and a Permutation}
+\label{sec_proposal_proximities}
+
+Our proposed random partition distribution is given in terms of attractions
+defined from the proximity information and a given permutation $\bm{\sigma}$.
+Later we discuss how we choose the permutation or consider all possible
+permutations.  For now, it suffices to say that attractions are permutation
+specific.  Let $h_{ik}$ denote the attraction of item $i$ to item $k$, defined
+as:
+\begin{equation}
+\label{eq_attraction}
+h_{ik} = 
+\begin{cases}
+\ ( \sigma^{-1}_i - 1 ) \ s_{ik}^t \ \big/ \, s_{i\cdot}^{\hspace{0.15ex}t} \quad & \text{if} \ \sigma^{-1}_k < \sigma^{-1}_i \\
+\ 0 & \text{otherwise}
+\end{cases}
+\end{equation}
+where $s_{i\cdot}^t$ is the sum of proximities (that have been raised to the power of $t>0$) between $i$
+and all items in the permutation before $i$, i.e.:
+\begin{equation}
+s_{i\cdot}^{\hspace{0.15ex}t} \ = \sum_{k \ : \ \sigma^{-1}_k \ < \ \sigma^{-1}_i} s_{ik}^t,
+\end{equation}
+where, as defined previously, $\sigma^{-1}_k$ is the order in which item $k$ is
+assigned a cluster.  Thus, the sum of all attractions of $i$ to all the
+preceeding items is $\sigma^{-1}_i - 1$, i.e., the number of preceeding items.
+If $k$ preceeds $i$ in the permutation $\bm{\sigma}$, then the attraction of
+$i$ to $k$ is proportional to the proximity $s_{ik}$ raised to the power of
+$t$.  Note that the attractions are not symmetric (i.e., $h_{ik} \not= h_{ki}$)
+and, if $i$ preceeds $k$ in the permutation $\bm{\sigma}$, there is no
+attraction of $i$ to $k$ (i.e., $h_{ik} = 0$).  We call $t>0$ in the exponent
+the \emph{temperature}, as it has the effect of dampening or accentuating the
+proximity information.
+
+\subsection{Chinese Restaurant Attraction Distribution for Given Permutation and Temperature}
+\label{sec_cra_given}
+
+We now present our proposed Chinese restaurant attraction distribution for the
+given permutation $\bm{\sigma}$ used to define the attractions from the known
+proximities and given temperature.  Its probability mass function for a cluster
+label vector $\bm{c}$, given the permutation $\bm{\sigma}$ and temperature $t$,
+is is the product of increasing conditionals:
+\begin{equation}
+\label{eq_cra_ppf}
+p(\bm{c} \given \bm{\sigma}, t) = \prod_{i=1}^n p(c_{\sigma_i} \given c_{\sigma_1}, \ldots, c_{\sigma_{i-1}}, t)
+\end{equation}
+where:
+\begin{equation}
+\label{eq_cra_ppf_component}
+\begin{split}
+p(c_{\sigma_i} \given c_{\sigma_1},\ldots,c_{\sigma_{i-1}}, t) 
+  & \ = \ \text{pr}(c_{\sigma_i} = j \given c_{\sigma_1},\ldots,c_{\sigma_{i-1}}, t) \\
+  & \ \propto \
+\begin{cases}
+\ \sum_{k=1}^{t-1} \ h_{ik} \cdot \text{I}\{c_{\sigma_k} = j\} & \text{for\
+\ } j=1,\ldots,q_{i-1} \\
+\ \ \mass & \text{for\ \ } j = q_{i-1} + 1.
+\end{cases}
+\end{split}
+\end{equation}
+Note that (\ref{eq_dpm_ppf}) and (\ref{eq_cra_ppf}) are the same except
+(\ref{eq_cra_ppf}) conditions on both a permutation $\bm{\sigma}$ and a
+temperature $t$ (through the definition of the attraction $h_{ik}$ in
+(\ref{eq_attraction})).  The difference between (\ref{eq_dpm_ppf_component})
+and (\ref{eq_cra_ppf_component}) is that (\ref{eq_cra_ppf_component})
+introduces an attraction $h_{ik}$ (which implicitly depends on the temperature
+$t$) in front of the indicator function.  Note that the normalizing constant is
+still $1/( \mass + i - 1 )$.  Thus, the probability of assigning item
+$\sigma_i$ to a new cluster is still $\mass / ( \mass + i - 1)$.
+
+Because of the equivalence of a cluster label vector $\bm{c}$ and a partition $\partition_n$,
+we can use (\ref{eq_cra_ppf}) and (\ref{eq_cra_ppf_component}) to express
+$p(\partition_n \mid \bm{\sigma}, t)$,
+the probability mass function of a partition $\partition_n$ for the Chinese restaurant attraction distribution:
+\begin{equation}
+\label{eq_cra}
+p(\partition_n \mid \bm{\sigma}, t) = \prod_{S \in \partition_n} \, \mass \, \biggg[ \prod_{i \in S} \sum_{k=1}^n h_{ik} \cdot \text{I}\{ k \in S \} \biggg] \Biggg/ \mass^{(n)},
+\end{equation}
+where we interpret the expression in the square brackets to be 1 if the size of
+cluster $S$ is 1.  This is the same expression as (\ref{eq_dpm}), except the
+gamma function is replaced with the more complicated expression in square
+brackets and the function depends on the permutation $\bm{\sigma}$ and
+temperature $t$ (through the definition of the attraction $h_{ik}$ in
+(\ref{eq_attraction})).
+
+\subsection{Marginalized Chinese Restaurant Attraction Distributions through Priors and Integration}
+\label{sec_mcra}
+
+So far, the Chinese restaurant attraction distribution has been defined
+conditioned on a permutation $\bm{\sigma}$ and temperature $t$.  The
+distribution of the permutation $\bm{\sigma}$ is a modeling choice.  Among the
+possibilities, we discuss three.  First, if there is a natural sequential
+ordering of the observations, the permutation could be fixed at that value,
+i.e., the distribution of the permutation $\bm{\sigma}$, denoted
+$p(\bm{\sigma})$, could simply be a point mass distribution at the one natural
+permutation.  Second, one could use a point mass distribution at the
+permutation $\bm{\sigma}$ that allocates items from largest average proximity
+to the smallest average proximity, thereby assigning early customers who are
+close on average and assigning later those that are more extreme.  The rational
+here is to minimize the influence of outliers in initial cluster formation.
+This ordering is likely to be unique if there are no ties among the
+proximities.  Finally, one might consider using the uniform distribution on
+permutations, i.e., $p(\bm{\sigma}) = 1/n!$ for all $\bm{\sigma}$.  Since the
+temperature $t$ is restricted to the positive real line, an obvious
+distribution for $t$, with density $p(t)$, is a gamma distribution.
+
+With the known proximity or distance information, we integrate over the random
+permutation $\bm{\sigma}$ and random temperature $\bm{t}$, to obtain the the
+marginalized Chinese restaurant attraction (MCRA) distribution, whose
+probability mass function is:
+\begin{equation}
+\label{eq_mcra}
+p(\partition_n) = \int \int \ p(\partition_n \given \bm{\sigma}, t ) \ p(\bm{\sigma}) \ p(t) \ d \bm{\sigma} \ d t.
+\end{equation}
+Equivalently, the MCRA distribution $p(\partition_n)$ for $\partition_n$ can be expressed as: 
+\begin{equation}
+\label{eq_bnp_dpm}
+\begin{split}
+\partition_n \given \bm{\sigma}, t \ & \sim p(\partition_n \given \bm{\sigma}, t) \\
+\bm{\sigma} & \sim p(\bm{\sigma}) \\
+t & \sim p(t),
+\end{split}
+\end{equation}
+where $p(\partition_n \mid \bm{\sigma}, t)$ is (\ref{eq_cra}), $p(\bm{\sigma})$
+is a distribution on the integers $1,\ldots,n$ (e.g., a uniform distributions),
+and $p(t)$ a distribution on the positive real line (e.g., a gamma
+distribution).  In Section \ref{sec_modeling}, we propose the MCRA distribution
+as a prior distribution on a partition $\partition_n$ in Bayesian modeling.
+Before doing so, we explore the properties of the MCRA distribution in Section
+\ref{sec_properties}.
+
+\section{Properties of Proposed Distribution}
+\label{sec_properties}
+
+\subsection{Distribution of the Number of Clusters}
+\label{sec_dist_number_of_clusters}
+
+In both the Chinese restaurant process (see (\ref{eq_dpm_ppf}) and
+(\ref{eq_dpm_ppf_component})) and the proposed Chinese restaurant attraction
+distribution (see (\ref{eq_cra_ppf}) and (\ref{eq_cra_ppf_component})), the
+probability that item $\sigma_i$ is assigned to a new cluster is $\mass / (
+\mass + i - 1)$.  Therefore, the distribution of the number of clusters in
+(\ref{eq_dist_number_of_clusters}) and the the mean and the variance in
+(\ref{eq_moments_number_of_clusters}) hold in both cases.  The point is that
+the mass parameter $\mass$ and pairwise proximity information are orthogonal.
+The role, interpretation, and intuition regarding the mass parameter $\mass$
+that one has for the Chinese restaurant process carries over directly to the
+proposed Chinese restaurant attraction distribution.  Further, the pairwise
+proximity information influences the allocation of probability among partitions
+within a \emph{given number} of components, but does \emph{not} shift
+probability among sets of partitions of \emph{different} number of components.
+
+\subsection{Exchangeability}
+
+A feature of the proposed random partition distribution is that it is
+\emph{not} exchangeable.  For a fixed number of components and size of each
+component, partitions which concur with the known pairwise proximity
+information are given more probability than are partitions which conflict with
+the pairwise proximity information.
+
+While nonexchangeable, it should be noted that our proposal is invariant to the
+order in which the observations are recorded in the dataset.  Consider a
+cluster label vector $\bm{c}$, a permutation $\bm{\sigma}$, and known pairwise
+proximities.  An arbitrary permutation $\bm{c}^\ast$ of the elements of
+$\bm{c}$ has the same probability as does $\bm{c}$, assuming that same
+permutation is also applied to the permutation $\bm{\sigma}$ and the known
+proximities.
+
+In contrast to order invariance, our proposal is permutation dependent in that
+the probability of a partition $\partition_n$ in (\ref{eq_cra}) depends on the
+permutation $\bm{\sigma}$.  Thus, except for special cases discussed in Section
+\ref{sec_special_cases}, for any two permutations $\bm{\sigma}^{(1)} \not=
+\bm{\sigma}^{(2)}$ among all possible $n!$ permutations and any partition
+$\partition_n$, it may well be that:
+\begin{equation}
+\label{eq_permutation_invariance}
+p(\partition_n \given \bm{\sigma}^{(1)}) \not= p(\partition_n \given \bm{\sigma}^{(2)}).
+\end{equation}
+Hence choosing different distributions for $\bm{\sigma}$ leds to different
+marginalized Chinese restaurant attraction (MCRA) distributions in
+(\ref{eq_mcra}).
+
+\subsection{Consistency}
+
+In constrast with the Chinese restaurant process, the proposed Chinese
+restaurant attraction process is \emph{not} consistent.  Consistency requires
+that the marginal probabilities that two items are clustered together is
+constant regardless of what other items (with their associated pairwise
+proximity information) are considered.  Of course, saying that two items are
+``distant'' is relative to other items considered and, hence, subject to change
+as more items are considered.  Therefore, consistency should not be expected in
+the presence of pairwise proximity information.
+
+More formally, we argue that insisting on consistency in the context of
+pairwise proximity information is too limiting.  We do so with a simple example
+of $n=3$ items.  Consider the distribution $p_0$ of the partition
+$\partition_3$ in (\ref{eq_cra}).  Let $p_1$ be the distribution of the
+partition $\partition_2$ obtained by marginalizing $p_0$ over item $3$:
+\begin{align*}
+p_1(\{\{1,2\}\}) & = p_0(\{\{1,2,3\}\}) + p_0(\{\{1,2\},\{3\}\}) \\
+p_1(\{\{1\},\{2\}\}) & = p_0(\{\{1,3\},\{2\}\}) + p_0(\{\{1\},\{2,3\}\}) +
+p_0(\{\{1\},\{2\},\{3\}\})
+\end{align*}
+Finally, let $p_2$ be the distribution
+of the partition $\partition_2$ in (\ref{eq_cra}) assuming $n=2$.  Consistency
+requires that $p_1$ and $p_2$ be the same distribution:
+\begin{equation}
+\label{eq_consistency}
+\begin{split} p_1(\{\{1,2\}\}) & = p_2(\{\{1,2\}\}) \\
+p_1(\{\{1\},\{2\}\}) & = p_2(\{\{1\},\{2\}\}).
+\end{split}
+\end{equation}
+That is, consistency requires that:
+\begin{equation}
+\label{eq_consistencyfull}
+\begin{split}
+p_0(\{\{1,2,3\}\}) + p_0(\{\{1,2\},\{3\}\}) & = p_2(\{\{1,2\}\})
+\\ p_0(\{\{1,3\},\{2\}\}) + p_0(\{\{1\},\{2,3\}\}) + p_0(\{\{1\},\{2\},\{3\}\})
+& = p_2(\{\{1\},\{2\}\}).
+\end{split}
+\end{equation}
+
+We now show that requiring consistency --- in particular, that
+(\ref{eq_consistencyfull}) holds --- leads to a severe constraint on the
+possible proximities between items.  Without loss of generality, assume that
+the temperature $t$ is fixed at $1$, the mass parameter $\mass$ is fixed at
+$1$, and that proximity between items $1$ and $2$ is $1$. Let the proximity
+between items $1$ and $3$ be $a$ and the proximity between items $2$ and $3$ be
+$b$.  (Hence the distances between items $1$ and $2$ and between items $2$ and
+$3$ are, respectively, $1/a$ and $1/b$.) Consider the marginalized Chinese
+restaurant attraction distribution with a uniform distribution on the six
+possible permutations of the $n=3$ items.  Given the small sample size, it is
+possible to symbolically find the probabilities for each partition.  Table
+\ref{tab_distributions} shows the probabilities for partitions from
+distributions $p_0$ and $p_2$, as well as the relationship in
+(\ref{eq_consistencyfull}) required by consistency.  It can be shown that in
+order for the probabalities in Table \ref{tab_distributions} to satisfy
+(\ref{eq_consistencyfull}), the proximities $a$ and $b$ must be such that:
+\begin{equation}
+\label{eq_constraint}
+b = \frac{1}{a}.
+\end{equation}
+This constraint is displayed graphically in Figure \ref{fig_cassini}, where the
+Cassini oval shows the distances among the three observations that give
+consistency.  The conclusion is that requiring consistency severely constrains
+the pairwise information in ways that not are likely to be seen in practice.
+Incidently, the probabilities in Table \ref{tab_distributions} can be used to
+verify the desired property in (\ref{eq_nonuniform}).
+
+\setlength{\unitlength}{.001\textwidth}%{.025in}
+\begin{table}[tb]
+\caption{Tables of probabilities for each partition for distributions $p_0$ and
+$p_2$ and an illustration that consistency requires that the probabilities of
+the first two partitions from $p_0$ must be equal to $1/2$ and the sum of the
+probabilities of other three partitions from $p_0$ must also be $1/2$}
+\label{tab_distributions}
+\centering
+\newcommand{\mybox}[1]{\parbox[t][5ex][c]{16ex}{#1}}
+\newcommand{\myboxx}[1]{\parbox[t][5ex][c]{25ex}{#1}}
+\newcommand{\myboxxx}[1]{\parbox[t][5ex][c]{5ex}{#1}}
+\newcommand{\myboxxxx}[1]{\parbox[t][12ex][c]{5ex}{#1}}
+\begin{picture}(850,400)
+%\put(0,0){\line(1,0){850}}
+%\put(0,0){\line(0,1){400}}
+%\put(850,0){\line(0,1){400}}
+%\put(0,400){\line(1,0){850}}
+\put(0,0){\makebox(400,400)[tl]{
+  \small
+  \begin{tabular}{ll}
+  \toprule
+  Partition $\partition_3$ & Probability from $p_0$ \\ \midrule
+  \mybox{$\{\{1,2,3\}\}$} & \myboxx{$ \dfrac{1}{3} $} \\
+  \mybox{$\{\{1,2\},\{3\}\}$} & \myboxx{$ \dfrac{1}{18} + \dfrac{1}{9}\bigg( \dfrac{1}{1+a} + \dfrac{1}{1+b} \bigg) $} \\
+  \mybox{$\{\{1,3\},\{2\}\}$} & \myboxx{$ \dfrac{1}{18} + \dfrac{1}{9}\bigg( \dfrac{a}{a+b} + \dfrac{a}{1+a} \bigg) $} \\
+  \mybox{$\{\{1\},\{2,3\}\}$} & \myboxx{$ \dfrac{1}{18} + \dfrac{1}{9}\bigg( \dfrac{b}{a+b} + \dfrac{b}{1+b} \bigg) $} \\
+  \mybox{$\{\{1\},\{2\},\{3\}\}$} & \myboxx{$ \dfrac{1}{6} $} \vspace{1ex} \\
+  \bottomrule
+  \end{tabular}
+}}
+\put(505,68){\resizebox{3ex}{11.2ex}{\}}}
+\put(505,247){\resizebox{3ex}{8ex}{\}}}
+\put(560,0){\makebox(200,400)[tl]{
+  \small
+  \begin{tabular}{ll}
+  \toprule
+  Partition $\partition_2$ \hspace{2ex} & Probability from $p_2$ \\ \midrule
+  \myboxxxx{$\{\{1,2\}\}$} & \myboxxxx{$\dfrac{1}{2}$} \\
+  \myboxxx{} & \myboxxx{} \\
+  \myboxxx{$\{\{1\},\{2\}\}$} & \myboxxx{$\dfrac{1}{2}$} \\
+  \myboxxx{} & \myboxxx{} \vspace{1ex} \\
+  \bottomrule
+  \end{tabular}
+}}
+\end{picture}
+\end{table}
+
+\begin{figure}[b]
+\centering\includegraphics[width=0.3\textwidth]{cassini-oval}
+\caption{In order for the proposed distributions to have the consistency
+property, item 3 is constrained to fall on this Cassini oval.}
+\label{fig_cassini}
+\end{figure}
+
+\subsection{Simplification in Special Cases}
+\label{sec_special_cases}
+
+We note that the proposed marginalized Chinese restaurant attraction
+distribution simplifies to the usual Chinese restaurant process in two cases.
+The first case is when all items are equi-distant to all other items, e.g.,
+$s_{ik}$ equals a constant for all pairs $i$ and $k$.  The second case is when
+the temperature $t$ is equal to 0.  In this case $s_{ik}^t$ equals $1$,
+regardless of the value $s_{ik}$, and therefore $h_{ik} = 1$, making
+(\ref{eq_cra_ppf_component}) reduce to (\ref{eq_dpm_ppf_component}).
+
+\subsection{Effect of Temperature}
+\label{sec_temperature}
+
+To illustrate the effect of temperature $t$ in the marginalized Chinese
+restaurant attraction distribution, consider the ``USArrests'' dataset from R
+\citep{Rsoftware}.  The USArrests datasets ``contains statistics, in arrests
+per 100,000 residents for assault, murder, and rape in each of the 50 United
+States.  in 1973.  Also given is the percent of the population living in urban
+areas.'' We computed the Euclidean distance between the four-dimensional data
+vectors of five randomly selected states.  The data and pairwise distances are
+displayed in Table \ref{tab:usa}.
+
+\begin{table}
+\centering
+\caption[Subset of the USArrests dataset]{
+Five-state subset of the USArrests dataset and their associated Euclidean distances}
+\label{tab:usa}
+\begin{subtable}[b]{0.48\textwidth}
+\footnotesize
+\begin{tabular}{lrrrr}
+  \toprule
+\multicolumn{2}{r}{Murder} & Assault & Rape & Urban \\
+  \midrule
+  North Carolina (NC) & 13.00 & 337 &  45 & 16.10 \\ 
+  Illinois (IL) & 10.40 & 249 &  83 & 24.00 \\ 
+  Nebraska (NE) & 4.30 & 102 &  62 & 16.50 \\ 
+  Michigan (MI) & 12.10 & 255 &  74 & 35.10 \\ 
+  Washington (WA) & 4.00 & 145 &  73 & 26.20 \\ 
+  \bottomrule
+\end{tabular}
+\caption{Subset of USArrests dataset}
+\label{tab:usa:data}
+\end{subtable}
+\hspace{2ex}
+\begin{subtable}[b]{0.48\textwidth}
+\footnotesize
+\begin{tabular}{rrrrrrr}
+  \toprule
+  & NC & IL & NE & MI & WA \\ 
+  \midrule
+  NC & 0.00 & 96.21 & 235.77 & 89.03 & 194.50 \\ 
+  IL & 96.21 & 0.00 & 148.81 & 15.59 & 104.70 \\ 
+  NE & 235.77 & 148.81 & 0.00 & 154.79 & 45.43 \\ 
+  MI & 89.03 & 15.59 & 154.79 & 0.00 & 110.66 \\ 
+  WA & 194.50 & 104.70 & 45.43 & 110.66 & 0.00 \\ 
+  \bottomrule
+\end{tabular}
+\caption{Euclidean distances between data vectors}
+\label{tab:usa:dist}
+\end{subtable}
+\end{table}
+
+We computed the probability of each of the $B(5) = 52$ possible parititions of
+the five states for a range of temperatures, letting the mass parameter
+$\mass=2$ and using the uniform distribution on permutations.  The results are
+displayed in Figure \ref{fig_evolution_joint}.  At a given temperature, the
+cumulative probabilities of the $52$ partitions for the five states are
+displayed.  For each partition, the cumulative probabilities across
+temperatures are joined to form the curves and the probability of a given
+partition is the difference between curves.  The curves of several interesting
+partitions are identified using the cluster label notation.  The temperature
+$t=0$ corresponds to the partition distribution of the usual Chinese restaurant
+process.  As the temperature increases, the pairwise distances become more
+influential.  That is, as the temperature gets large, the marginalized Chinese
+restaurant attraction distribution has appreciable probability on several
+partitions and virtually no probability on others.  Partitions that lose the
+most probability are shaded pink and those that gain the probability are
+labeled and shaded cyan.  Note, however, that the total probability of
+partitions with a given number of clusters stays constant.  (See Section
+\ref{sec_dist_number_of_clusters}.)
+
+\begin{figure}[tb]
+\centering\includegraphics[width=0.95\textwidth]{evolution-joint}
+\caption{The cumulative probabilities of the $52$ partitions for the five
+states selected from the USArrests dataset.  For each partition, the cumulative
+probabilities across temperatures are joined to form the curves and the
+probability of a given partition is the difference between curves.  The curves
+of several interesting partitions are identified using the cluster label
+notation.}
+\label{fig_evolution_joint}
+\end{figure}
+
+Whereas, Figure \ref{fig_evolution_joint} shows the partition distribution
+evolving across temperature $t$, Figure \ref{fig_evolution_pairwise} shows the
+evolution across temperature $t$ of the marginal probability of two states
+clustering.  When temperature $t=0$, the marginal probability of any two states
+clustering is $1/(1+\mass) = 1/3$ and these probabilities diverge --- and
+eventually asymptote --- as the temperature $t$ increases.
+
+\begin{figure}[tb]
+\centering\includegraphics[width=0.65\textwidth]{evolution-pairwise}
+\caption{Evolution across temperature $t$ of the marginal probability of two states
+clustering in the USArrests example.}
+\label{fig_evolution_pairwise}
+\end{figure}
+
+\section{As a Prior Distribution on a Partition in Bayesian Modeling}
+\label{sec_modeling}
+
+\subsection{Model}
+
+Using a Dirichlet process \citep{ferg:1973} as a prior distribution for an
+unknown mixing distribution in mixture models was first suggested by
+\citet{anto:1974}.  Its use leads to arguably the most popular Bayesian
+nonparametric model: the Dirichlet process mixture model.  The Dirichlet
+process implies the Polya urn scheme \citep{blac:macq:1973}, a probability
+model $p(\partition_n)$ for a random partition $\partition_n$ equivalent to Ewens-Pitman
+distribution \citep{ewens:1972,pitm:1995,pitm:1996}.
+A broader class of Bayesian nonparametric models for data $\bm{y} =
+(y_1,\ldots,y_n)$ can be written as:
+\begin{equation}
+\label{eq_bnp_dpm}
+\begin{split}
+y_i \given \theta_i \ & \sim \ p(y_i \given \theta_i) \\
+\theta_i \ & = \ \sum_{j=1}^{q_n} \phi_j \I{i \in S_j} \\
+\phi_j \ & \sim \ G_0 \\
+\partition_n \ & \sim \ p(\partition_n),
+\end{split}
+\end{equation}
+where $p(y \given \theta)$ is a sampling distribution indexed by $\theta$,
+$G_0$ is the prior distribution from which $\phi_1,\ldots,\phi_{q_n}$ are
+independently drawn, and $p(\partition_n)$ is a prior distribution over
+partitions of the form $\partition_n = \{S_1,\ldots,S_{q_n}\}$.  Let $\bm{\phi}
+= (\phi_{q_n},\ldots,\phi_{q_n})$.  The model can be enriched by indexing the
+sampling model by other parameters or by placing hyperpriors on quantities
+defining the prior distribution.  When $p(\partition_n)$ is defined as in
+(\ref{eq_dpm}), $G_0$ is known as the ``centering'' distribution of the
+Dirichlet process and the model is the popular Dirichlet process mixture model.
+When pairwise information is present, however, we propose that the prior
+distribution $p(\partition_n)$ be the marginalized Chinese restaurant
+attraction distribution, given in (\ref{eq_mcra}).
+
+\subsection{Sampling from the Prior Distribution of a Random Partition}
+
+We now describe how to sample a partition $\partition_n$ from the marginalized
+Chinese restaurant attraction distribution.  First, if the permutation is not
+fixed, sample a permutation $\bm{\sigma}$ from the permutation distribution
+$p(\bm{\sigma})$ discussed in Section \ref{sec_mcra}.  In the case of the
+uniform distribution on partitions, i.e., $p(\bm{\sigma}) = 1/n$, a random
+permutation is readily obtained by sorting integers $1,\ldots,n$ according to
+uniformally-distributed random numbers on the real line or through standard
+functions in software (e.g., \texttt{sample(1:n)} in R).  Next, if it is not
+fixed, sample a temperature $t$ from the distribution $p(t)$, e.g., a gamma
+distribution.  Given the permutation $\bm{\sigma}$ and temperature $t$,
+calculate the attraction matrix as described in Section
+\ref{sec_proposal_proximities}.  Finally, sample the partition $\partition_n$
+from (\ref{eq_cra_ppf}) using the increasing conditionals in
+(\ref{eq_cra_ppf_component}).  Multiple partitions from the marginalized
+Chinese restaurant attraction distribution can be obtained by repeating this
+sampling process many times, computing new attractions at each iteration.
+
+\subsection{Sampling from the Posterior Distribution of a Random Partition}
+
+In Bayesian analysis, interest lies in the posterior distribution of parameters
+given the data.  The posterior distribution $p(\partition_n, \bm{\sigma}, t,
+\bm{\phi} \given \bm{y})$ is not available in closed-form, but a Markov chain
+Monte Carlo (MCMC) algorithm is available, as we now describe.  This algorithm
+systematically updates parts of the parameter space at each iteration and
+performs many iterations.
+
+First, we present the update of $\bm{\phi} = (\phi_{q_n},\ldots,\phi_{q_n})$
+given $\partition_n$, $\bm{\sigma}$, $t$.  This update is the same as in any other random partition
+model, including the Dirichlet process mixture model.  Let $\bm{y}_j = \{y_i :
+i \in S_j\}$ for the partition $\partition_n = \{ S_1, \ldots, S_{q_n} \}$.
+For $j=1,\dots,q_n$, update $\phi_j$ using its full conditional distribution:
+\begin{equation}
+p(\phi_j \given \bm{y}_j) \propto \ p(\phi_j) \prod_{i \in S_j} p(y_i | \phi_j),
+\end{equation}
+where $p(\phi)$ is the density of the centering distribution $G_0$.  This full
+conditional distribution can usually be sampled
+directly if $G_0$ is conjugate to the sampling model $p(y \given \phi)$.  If not,
+any other valid MCMC update can be used, including a Metropolis Hastings update.
+
+Second, consider the update of the partition $\partition_n$ given
+$\bm{\sigma}$, $t$, and $\bm{\phi}$.  Because the model is not exchangeable,
+the usual algorithms (such as those reviewed in \citet{neal:2000}), do not
+hold.  Let $\mathcal{C}_i(\partition_n)$ be the set of partitions that contains
+$\partition_n = \{ S_1, \ldots, S_{q_n}\}$ and all partitions that can be obtained from $\partition_n$
+by reallocating item $i$ to a new singleton component $S_{q_n+1}$ or one of the
+existing components $S_1,\ldots,S_{q_n}$.
+
+\[
+p( \ i \in S_j \given \partition_n, t, \bm{\sigma}, \bm{\phi} ) \propto \prod_{n=1}^q
+\]
+
+\[
+\{ S_1 \setminus \{i\}, \ldots, S_{q_n} \setminus \{i\} \}
+\]
+
+%    \subsection{Sampling from the Posterior Distribution}
+%    \DBD{---Posterior sampling using MCMC.
+%    Three challenges: 1. Updating the partition (show how to modify Neal's Auxliary Gibbs sampler (Algorithm 8)),
+%                      2. Updating the Permutation,
+%                      3. Updating the temperature. Give proposal mechanism, etc.}
+%    
+%    \section{Demonstration}
+%    
+%    \subsection{``Knob-Socket'' Model for Protein Structure Prediction}
+%    
+%    \subsection{Computational Considerations}
+%    
+%    \DBD{---CPU time and acceptance rates.  How it scales.}
+%    
+%    \subsection{Model Comparison Results}
+%    
+%    \section{Discussion}
+%    
+%    \DBD{``This is the concluding part of the paper. It is only needed if it contains new material. It should
+%    not repeat the summary or reiterate the contents of the paper.''}
+
+\section*{Acknowledgments}
+
+The authors gratefully acknowledge Peter M\"{u}ller, David H.\ Russell, Lei Tao, Ryan Day, Gordon B.\ Dahl,
+Kristin P.\ Lennox, and Marina Vannucci for helpful suggestions.
+This work has been supported by NIH NIGMS R01 GM104972.
+
+\bibliography{refs}
+\bibliographystyle{biometrika}
+
+% \input{old}
+
+\end{document}

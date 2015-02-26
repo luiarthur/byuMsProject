@@ -1,0 +1,109 @@
+\documentclass{article}                                                   
+\usepackage{fullpage}                                                     
+\usepackage{pgffor}                                                       
+\usepackage{amssymb}                                                      
+%\usepackage{Sweave}                                                      
+\usepackage{bm}                                                           
+\usepackage{mathtools}                                                    
+\usepackage{verbatim}                                                     
+\usepackage{appendix}                                                     
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{paralist} % compactenum
+\usepackage[UKenglish]{isodate} % for: \today                             
+\cleanlookdateon                % for: \today                             
+                                                                          
+\def\wl{\par \vspace{\baselineskip}\noindent}                             
+%\def\beginmyfig{\begin{figure}[!Htbp]\begin{center}}                     
+\def\beginmyfig{\begin{figure}[H]\begin{center}}                          
+\def\endmyfig{\end{center}\end{figure}}                                   
+\def\prodl#1#2#3{\prod\limits_{#1=#2}^{#3}}                               
+\def\suml#1#2#3{\sum\limits_{#1=#2}^{#3}}                                 
+\def\sums#1#2#3{\sum\limits_{#1:#2}^{#3}}                                 
+\def\ds{\displaystyle}                                                    
+\def\hik{\ds\frac{\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}
+        {\suml{k}{1}{y_i}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+% Compactenum:
+\renewenvironment{itemize}[1]{\begin{compactitem}#1}{\end{compactitem}}
+\renewenvironment{enumerate}[1]{\begin{compactenum}#1}{\end{compactenum}}
+\renewenvironment{description}[0]{\begin{compactdesc}}{\end{compactdesc}}
+                                                                          
+\begin{document}                                                          
+% my title:                                                               
+\begin{center}                                                            
+  \section*{\textbf{The Attraction Indian Buffet Process}}
+  \subsection*{\textbf{Arthur Lui}}                                       
+  \subsection*{\noindent\today}                                           
+\end{center}                                                              
+\setkeys{Gin}{width=0.5\textwidth}                                        
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\subsection{Definitions}
+\noindent
+Let:
+\begin{itemize}
+  \item $\bm \sigma = (\sigma_1,..\sigma_n)$ of ${1,...n}$ gives the sequence
+        in which the n items are allocated, where the $t^{th}$ item allocated
+        is $\sigma_t$. 
+  \item $\lambda(i,j)$ = similarity between customers $i$ and $j$.
+  \item $x_i$ be the number of \textit{new} dishes that customer $i$ draws.\\ 
+  \item $y_{-i} = \suml{j}{1}{i-1} x_j$, the number of existing dishes
+        before customer $i$ draws new dishes.
+  \item $g_i(x_i) = \ds\frac{(\alpha/i)^{x_i}\exp(-\alpha/i)}{x_i!}$, 
+        which is the probability mass function for a Poisson distribution 
+        with parameter $\alpha/i$ and argument $x_i$.\\
+  \item $K$ = the number of non-zero columns in $\bm Z$.\\
+  \item $m_{-i,k}$ = the number of customers that took dish $k$ before customer
+        customer $i$.
+  \item $m_{-i} = \suml{k}{1}{K}m_{-i,k}$.
+  \item $h_{i,k} = \ds\frac{\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}
+        {\suml{k}{1}{y_i}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)} $
+  \item $p_{i,k} = h_{i,k} \ds\frac{m_{-i}}{i}$
+  %\item $h(i) = \prodl{k}{1}{y_{-i}} 
+  %      (p_{i,k})^{z_{i,k}}(1-p_{i,k})^{1-z_{i,k}}$, for $i>1$,
+  %      and $1$ for $i=1$.
+  \item $H_N = \suml{i}{1}{N} \ds\frac{1}{i}$.
+\end{itemize}
+
+
+\subsection{Description of IBP}
+\begin{itemize}
+  \item The first customer draws a $x_1=$ Pois($\alpha$) number of dishes. This
+        is indicated by setting $z_{1,1:x_1}$ to $1$.
+  \item For the next $i$ customers, for $i=1:N$, 
+     \begin{itemize}
+       \item if there exists previously sampled dishes, then customer $i$
+             samples dish k with probability $\left(h_{i,k}\right) 
+             \left(\ds\frac{m_{-i}}{i}\right)$, for $ k = 1:y_{-i}$.
+       \item customer $i$ draws another Pois($\alpha/i$) number of new dishes.
+     \end{itemize}
+\end{itemize}
+
+\subsection{PMF of AIBP Distribution}
+\begin{align*}
+  \text{P}(\bm Z|\bm\sigma)
+  =&\prodl{i}{1}{N} \left\{g_i(x_i) \prodl{k}{1}{y_{-i}} 
+    (p_{i,k})^{z_{i,k}}(1-p_{i,k})^{1-z_{i,k}}\right\}\\
+  =&\prodl{i}{1}{N} \left\{ \ds\frac{(\alpha/i)^{x_i}\exp(-\alpha/i)}{x_i!} 
+    \prodl{k}{1}{y_{-i}} 
+    \ds\frac{(h_{i,k}m{-i})^{z_{i,k}}(i-h_{i,k}m_{-i,k})^{1-z_{i,k}}}{i} 
+    \right\} \\
+  =&\ds\frac{\alpha^{\suml{i}{1}{N}x_i} \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!} 
+    \left( \prodl{i}{1}{N}i^{-x_i} \right)
+    \left( \prodl{i}{1}{N}\prodl{k}{1}{y_{-i}} 
+    \ds\frac{\left(\hik m_{-i}\right)^{z_{i,k}}
+             \left(i-\hik m_{-i}\right)^{1-z_{i,k}}}{i} \right)\\
+  =&\ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!} 
+    \left( \prodl{i}{2}{N} i^{-x_i-y_{-i}}\prodl{k}{1}{y_{-i}} 
+    \ds\frac{
+    \left(\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)m_{-i}\right)^{z_{i,k}}
+    \left(i-\sums{\sigma}{z_{-i,k}=1}{}
+    \lambda(\sigma,\sigma_i)m_{-i}\right)^{1-z_{i,k}}
+    }
+    {\suml{k}{1}{y_{-i}}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}
+    \right)
+\end{align*}
+
+\end{document}

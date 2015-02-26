@@ -1,0 +1,5 @@
+#!/bin/bash
+
+pdflatex gharamani.tex
+rm -f *.log *.aux
+firefox *.pdf &

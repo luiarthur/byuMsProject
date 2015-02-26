@@ -1,0 +1,51 @@
+\documentclass[10pt]{article}
+\usepackage{fullpage}
+\usepackage{pgffor}
+\usepackage{amssymb}
+\usepackage{Sweave}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{appendix}
+\usepackage[UKenglish]{isodate} % for: \today
+\cleanlookdateon                % for: \today
+
+\def\wl{\par \vspace{\baselineskip}\noindent}
+
+\begin{document}
+
+\begin{center}
+  \section*{\textbf{Properties}} 
+  \subsection*{\textbf{Arthur Lui}} 
+  \subsection*{\noindent\today} 
+\end{center}
+\setkeys{Gin}{width=0.5\textwidth}
+
+<<design,echo=F,results=hide>>=
+  source("../../disprove.R",chdir=T)
+@
+
+\section{Distance Matrix}
+\[
+<<label=tab1,echo=F,results=tex>>=
+  library(xtable)
+  x=xtable(M1,align=rep("",ncol(M)+1),digits=3)
+  print(x,floating=F,tabular="pmatrix",include.row=F,include.col=F,hline.a=NULL)
+@
+\]
+
+\section{Plot}
+\begin{center}
+<<fig=T,echo=F>>=
+  plot.relation()
+@
+\end{center}
+
+\wl
+Notice that when $d=0.1$, and $p\approx0.4$, but when $d=0.3$, $p\approx0.6$. \\
+Therefore, for Blei's ddcrp, when $\alpha=1$, given the distance matrix above,
+it is not necessarily the case that $P(c_i = c_j)$ is monotonically decreasing in
+$d_{ij}$, holding all other distances constant.
+
+
+\end{document}

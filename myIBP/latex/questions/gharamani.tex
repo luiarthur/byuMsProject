@@ -1,0 +1,66 @@
+\documentclass{article}                                                   %
+\usepackage{fullpage}                                                     %
+\usepackage{pgffor}                                                       %
+\usepackage{amssymb}                                                      %
+%\usepackage{Sweave}                                                       %
+\usepackage{bm}                                                           %
+\usepackage{mathtools}                                                    %
+\usepackage{verbatim}                                                     %
+\usepackage{appendix}                                                     %
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{paralist} % compactenum
+\usepackage[UKenglish]{isodate} % for: \today                             %
+\cleanlookdateon                % for: \today                             %
+                                                                          %
+\def\wl{\par \vspace{\baselineskip}\noindent}                             %
+%\def\beginmyfig{\begin{figure}[!Htbp]\begin{center}}                     %
+\def\beginmyfig{\begin{figure}[H]\begin{center}}                          %
+\def\endmyfig{\end{center}\end{figure}}                                   %
+\def\prodl#1#2#3{\prod\limits_{#1=#2}^{#3}}                               %
+\def\suml#1#2#3{\sum\limits_{#1=#2}^{#3}}                                 %
+\def\ds{\displaystyle}                                                    %
+
+% Compactenum:
+\renewenvironment{itemize}[1]{\begin{compactitem}#1}{\end{compactitem}}
+\renewenvironment{enumerate}[1]{\begin{compactenum}#1}{\end{compactenum}}
+\renewenvironment{description}[0]{\begin{compactdesc}}{\end{compactdesc}}
+                                                                          %
+\begin{document}                                                          %
+% my title:                                                               %
+\begin{center}                                                            %
+  \section*{\textbf{Alternative Derivation For the pmf of the 
+                    Indian Buffet Process?}}   %
+  \subsection*{\textbf{Arthur Lui}}                                       %
+  \subsection*{\noindent\today}                                           %
+\end{center}                                                              %
+\setkeys{Gin}{width=0.5\textwidth}                                        %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent
+Let:
+\begin{itemize}
+  \item $x_i$ be the number of \textit{new} dishes that customer $i$ draws.\\ 
+  \item $g_i(x_i) = \ds\frac{(\alpha/i)^{x_i}\exp(-\alpha/i)}{x_i!}$, which is the 
+        probability mass function for a Poisson distribution with parameter 
+        $\alpha/i$ and argument $x_i$.\\
+  \item $K$ = the number of non-zero columns in $\bm Z$.\\
+  \item $m_{-i,k}$ = the number of customers that took dish $k$ before customer
+        customer $i$.
+  \item $m_k$ = the \textit{total} number of customers that took dish $k$.
+  \item $H_N = \suml{i}{1}{N} \ds\frac{1}{i}$.
+\end{itemize}
+
+\begin{align*}
+  \text{P}(\bm Z)
+  =&\prodl{i}{1}{N} \left\{g_i(x_i) \prodl{k}{1}{K} \frac{m_{-i,k}}{i}\right\}\\
+  =&\prodl{i}{1}{N} \left\{ \ds\frac{(\alpha/i)^{x_i}\exp(-\alpha/i)}{x_i!} 
+    \prodl{k}{1}{K} \ds\frac{m_{-i,k}}{i} \right\} \\
+  =&\ds\frac{\alpha^{\suml{i}{1}{N}x_i} \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!} 
+    \left( \prodl{i}{1}{N}i^{-x_i} \right)
+    \left( \prodl{i}{1}{N}\prodl{k}{1}{K} \ds\frac{m_{-i,k}}{i} \right)\\
+  =&\ds\frac{\alpha^{K} \exp(-\alpha H_N)}{\prodl{i}{1}{N}x_i!}
+    \left(\prodl{k}{1}{K}\ds\frac{\prodl{i}{1}{N}\ds\frac{m_{-i,k}}{i^{x_i/K}}}{N!} \right)\\
+\end{align*}
+
+\end{document}

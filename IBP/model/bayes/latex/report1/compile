@@ -1,0 +1,7 @@
+#!/bin/bash
+
+pdflatex report.tex
+rm *.log *.aux *.out *.toc *.snm 
+cp report.pdf ~/report.pdf
+#~/chrome/opt/google/chrome/google-chrome --no-sandbox %U report.pdf &
+#firefox report.pdf &
