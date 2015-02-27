@@ -1,4 +1,4 @@
-source("ddibp.R")
+source("ddibp.R",chdir=T)
 library(xtable)
 library(shiny)
 
