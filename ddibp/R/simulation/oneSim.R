@@ -1,20 +1,30 @@
 B <- 1e4 # problems
 a <- .5
 
-# 1 close to 2, 2 close-ish to 3, 1 far from 3. 
 D1 <- matrix(c(0,1,9,
-               1,0,3,
-               9,3,0),3,3)
+               1,0,1,
+               9,1,0),3,3)
 
-# 1 far from to 2, 2 close-ish to 3, 1 close from 3. 
-D2 <- matrix(c(0,9,1,
-               9,0,3,
-               1,3,0),3,3)
-
-# 1 close to 2, 2 far from 3, 1 close-ish 3. 
-D3 <- matrix(c(0,1,3,
+D2 <- matrix(c(0,1,1,
                1,0,9,
-               3,9,0),3,3)
+               1,9,0),3,3)
+
+D3 <- matrix(c(0,1,1,
+               1,0,9,
+               1,9,0),3,3)
+
+D4 <- matrix(c(0,1,9,
+               1,0,1,
+               9,1,0),3,3)
+
+D5 <- matrix(c(0,9,1,
+               9,0,1,
+               1,1,0),3,3)
+
+D6 <- matrix(c(0,9,1,
+               9,0,1,
+               1,1,0),3,3)
+
 
 #D <- matrix(0,3,3); D[which(lower.tri(D))] <- 1; 
 #D <- matrix(1,3,3); D[which(upper.tri(D))] <- 0; 
