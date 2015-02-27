@@ -1,3 +1,5 @@
+source("ddibp.R")
+
 B <- 1e4 # problems
 a <- .5
 
