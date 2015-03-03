@@ -1,4 +1,21 @@
 # FUNCTIONS: ########################################################
+lof <- function(Z) {
+  z.col <- NULL
+  #if (ncol(Z) <= 1) as.matrix(Z)
+  Z <- as.matrix(Z)
+  #if (ncol(Z) == 0) print(Z) 
+  for (j in 0:ncol(Z)){
+    z.col[j] <- paste(Z[,j],collapse="")
+  }
+  z.col.bin <- strtoi(z.col,base=2)
+  
+  lof.Z <- as.matrix(Z[,rev(order(z.col.bin))])
+  while (ncol(lof.Z)>0 & sum(lof.Z[,ncol(lof.Z)])==0) 
+     lof.Z <- as.matrix(lof.Z[,-ncol(lof.Z)])
+
+  lof.Z
+}
+
 toMat <- function(s) {
   dims <- regexpr(": \\d* \\d*",s)
   begin <- as.integer(dims)+2
@@ -116,7 +133,7 @@ get.new.dish <- function(z) {
 inv <- function(s,t,d=D) 1/d[s,t] # inverse distance metric
 
 # Calculates Probability of Customer_i Getting Dish_k
-f. <- function(x,i=2,draw=F,lam=inv,log=F,perm=NULL) {
+f. <- function(x,i=2,draw=F,lam=inv,log=F) {
   K <- ncol(x)
   if (is.null(K)) K <- 0
   h <- function(x,i,k) {
@@ -147,9 +164,18 @@ f. <- function(x,i=2,draw=F,lam=inv,log=F,perm=NULL) {
   out
 }
 
+permute.D <- function(D,perm) {
+  n <- nrow(D)
+  orig.lower <- D[lower.tri(D)]
+  new.lower <- orig.lower[perm]
+  new <- matrix(0,n,n)
+  new[which(lower.tri(new))] <- new.lower
+  new <- new + t(new)
+  new 
+}
 
 # For a GIVEN PERMUTATION!!!
-raibp <- function(N=3,a=3,D=NULL,l=inv,perm=NULL) {
+raibp <- function(N=3,a=3,D=NULL,l=inv,permute=F) {
   K <- rpois(1,a)
   Z <- matrix(0,N,K) 
   Z[1,0:K] <- 1 # The first customer draws a POI(a) number of new dishes
@@ -159,6 +185,9 @@ raibp <- function(N=3,a=3,D=NULL,l=inv,perm=NULL) {
     D <- matrix(1,N,N)
     diag(D) <- 0
   }
+  
+  perm <- sample(1:N)
+  if (permute) {D <- permute.D(D,perm)}
 
   if (N>=2) {
     for (i in 2:N) {
@@ -176,10 +205,15 @@ raibp <- function(N=3,a=3,D=NULL,l=inv,perm=NULL) {
     }
   }
   
+  if (permute) {
+    inv.perm <- apply(matrix(1:N),1,function(x) which(x==perm))
+    Z <- lof(Z[inv.perm,])
+  }
+
   Z
 }
 
-daibp <- function(Z,a=3,D=NULL,l=inv,log=F,perm=NULL) {
+daibp <- function(Z,a=3,D=NULL,l=inv,log=F,permute=F) {
   N <- nrow(Z)
   K <- ncol(Z)
   x <- get.new.dish(Z)
@@ -205,6 +239,8 @@ daibp <- function(Z,a=3,D=NULL,l=inv,log=F,perm=NULL) {
   } else {
     p <- prod(dpois(0,a/(1:N)))
   }
+  
+  if (permute) p <- p/factorial(N)
 
   p
 }

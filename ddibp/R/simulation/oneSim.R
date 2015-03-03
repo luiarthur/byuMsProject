@@ -75,6 +75,13 @@ D55[1,5] <- D55[5,1] <- 1
 #              20,50,0,4,
 #              1000,30,4,0),4,4)
 
+#TEST: Permutations?
+#Z <- lapply(as.list(1:B),function(x) {ot <- Sys.time()
+#                                      o <- raibp(N=nrow(D55),a=2,D=D55,l=exp.decay,
+#                                                 perm=T)
+#                                      count.down(ot,x,B); o})
+#EZ <- sum.matrices(Z)/B
+
 exp.decay <- function(s,t,d) ifelse(s>t,0,exp(-d[s,t]))
 inv <- function(s,t,d) ifelse(s>t,0,1/d[s,t])
 
