@@ -27,6 +27,46 @@ D6 <- matrix(c(0,9,1,
                9,0,1,
                1,1,0),3,3)
 
+D7 <- matrix(c(0,9,1,
+               9,0,9,
+               1,9,0),3,3)
+
+D8 <- matrix(c(0,9,9,
+               9,0,1,
+               9,1,0),3,3)
+
+D9 <- matrix(c(0,1,1,9,
+               1,0,1,1,
+               1,1,0,1,
+               9,1,1,0),4,4)
+
+D10 <- matrix(c(0,1,1,9,
+                1,0,9,1,
+                1,9,0,1,
+                9,1,1,0),4,4)
+
+D11 <- matrix(c(0,1,1,9,
+                1,0,9,1,
+                1,9,0,1,
+                9,1,1,0),4,4)
+
+D12 <- matrix(c(0,9,1,9,
+                9,0,9,9,
+                1,9,0,9,
+                9,9,9,0),4,4)
+
+D13 <- matrix(c(0,9,9,1,
+                9,0,9,9,
+                9,9,0,9,
+                1,9,9,0),4,4)
+
+D99 <- matrix(9,7,7)
+diag(D99) <- 0
+D99[1,7] <- D99[7,1] <- 1
+
+D55 <- matrix(9,5,5)
+diag(D55) <- 0
+D55[1,5] <- D55[5,1] <- 1
 
 #D <- matrix(0,3,3); D[which(lower.tri(D))] <- 1; 
 #D <- matrix(1,3,3); D[which(upper.tri(D))] <- 0; 
@@ -97,6 +137,7 @@ one.sim <- function(D.name,a,B=1e4,num.cex=1) {
 
   cat("Comparing Methods (4/4): \n")
   M <- compare()
+  cat("Done\n")
 
   options("width"=80)
   list("EZO"=EZO,"EZD"=EZD,"EZA"=EZA,"uzo"=uzo,"uzd"=uzd,"uza"=uza,"M"=M,

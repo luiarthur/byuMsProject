@@ -116,7 +116,7 @@ get.new.dish <- function(z) {
 inv <- function(s,t,d=D) 1/d[s,t] # inverse distance metric
 
 # Calculates Probability of Customer_i Getting Dish_k
-f. <- function(x,i=2,draw=F,lam=inv,log=F) {
+f. <- function(x,i=2,draw=F,lam=inv,log=F,perm=NULL) {
   K <- ncol(x)
   if (is.null(K)) K <- 0
   h <- function(x,i,k) {
@@ -149,7 +149,7 @@ f. <- function(x,i=2,draw=F,lam=inv,log=F) {
 
 
 # For a GIVEN PERMUTATION!!!
-raibp <- function(N=3,a=3,D=NULL,l=inv) {
+raibp <- function(N=3,a=3,D=NULL,l=inv,perm=NULL) {
   K <- rpois(1,a)
   Z <- matrix(0,N,K) 
   Z[1,0:K] <- 1 # The first customer draws a POI(a) number of new dishes
@@ -179,7 +179,7 @@ raibp <- function(N=3,a=3,D=NULL,l=inv) {
   Z
 }
 
-daibp <- function(Z,a=3,D=NULL,l=inv,log=F) {
+daibp <- function(Z,a=3,D=NULL,l=inv,log=F,perm=NULL) {
   N <- nrow(Z)
   K <- ncol(Z)
   x <- get.new.dish(Z)
