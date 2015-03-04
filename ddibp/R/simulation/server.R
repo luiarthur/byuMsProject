@@ -18,9 +18,13 @@ shinyServer(function(input,output) {
   
   #B <- reactive({input$its})
   #a <- reactive({input$alpha})
-  result <- reactive({one.sim(paste0("D",input$distMatNum),
-                      a=input$alpha,B=input$its)})
-  #print(result()$M)
+  #result <- NULL
+  #submit <- input$submit
+  
+  result <- reactive({
+    if (input$submit==0) return(NULL)
+    one.sim(paste0("D",input$distMatNum),a=input$alpha,B=input$its)
+  })
 
   output$distMat = renderUI({
     DM <- eval(parse(text=paste0("D",input$distMatNum))) # Distance Matrix
@@ -36,22 +40,23 @@ shinyServer(function(input,output) {
   #  list(src=paste0("www/D",input$distMatNum,".png"))
   #}, deleteFile=FALSE)
 
-  output$matFreq = renderDataTable({(result())$M$info})
+  output$matFreq = renderDataTable({
+    if (input$submit==0) return(NULL)
+    (result())$M$info
+  })
 
   output$expVal = renderPlot({
+    if(input$submit==0) return(NULL)
     par(mfrow=c(3,1))
-    a.image(result()$EZO,number=T,main=paste("E[IBP], E[ncol] =",result()$mncolo))
-    a.image(result()$EZA,number=T,main=paste("E[AIBP], E[ncol] =",result()$mncola))
-    a.image(result()$EZD,number=T, main=paste("E[ddIBP], E[ncol] =",result()$mncold))
+      a.image(result()$EZO,number=T,main=paste("E[IBP], E[ncol] =",result()$mncolo))
+      a.image(result()$EZA,number=T,main=paste("E[AIBP], E[ncol] =",result()$mncola))
+      a.image(result()$EZD,number=T, main=paste("E[ddIBP], E[ncol] =",
+              result()$mncold))
     par(mfrow=c(1,1))
   })
 
-  #output$eibp   = renderPlot({(a.image(result()$EZO,number=T,
-  #                             main=paste("E[IBP], E[ncol] =",result()$mncolo)))})
-  #output$eaibp  = renderPlot({(a.image(result()$EZA,number=T,
-  #                             main=paste("E[AIBP], E[ncol] =",result()$mncola)))})
-  #output$eddibp = renderPlot({(a.image(result()$EZD,number=T,
-  #                             main=paste("E[ddIBP], E[ncol] =",result()$mncold)))})
-
-  output$matrix=renderUI({ printMatrix(result()$M$unique$matrix[[input$matNum]]) })
+  output$matrix=renderUI({ 
+    if(input$submit==0) return(NULL)
+    printMatrix(result()$M$unique$matrix[[input$matNum]])
+  })
 })
