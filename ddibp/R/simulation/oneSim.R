@@ -187,8 +187,9 @@ one.sim <- function(D.name,a,B=1e4,num.cex=1,printProgress=F,lF=function(x) 1) {
 #result <- one.sim("D71",a=a,B=10000,printProg=T,lF=exp.f)
 #result <- one.sim("D7",a=a,B=10000,printProg=T,lF=exp.f)
 #result <- one.sim("D8",a=a,B=10000,printProg=T,lF=exp.f)
+#result <- one.sim("D5666",a=2,B=10000,printProg=T,lF=exp.f)
 #
-##X11()
+###X11()
 #pdf("../../../prospectus/images/eSim.pdf")
 #  par(mfrow=c(3,1))
 #    a.image(result$EZO,number=T,main=paste("E[IBP], E[ncol] =",result$mncolo),
@@ -196,7 +197,7 @@ one.sim <- function(D.name,a,B=1e4,num.cex=1,printProgress=F,lF=function(x) 1) {
 #    a.image(result$EZA,number=T,main=paste("E[AIBP], E[ncol] =",result$mncola),
 #            num.cex=1)
 #    a.image(result$EZD,number=T, main=paste("E[ddIBP], E[ncol] =",
-#            result$mncold),num.cex=.9)
+#            result$mncold),num.cex=.7)
 #  par(mfrow=c(1,1))
 #dev.off()
 #
@@ -255,6 +256,16 @@ one.sim <- function(D.name,a,B=1e4,num.cex=1,printProgress=F,lF=function(x) 1) {
 #    a.image(round(Eo,5),numbers=T,num.cex=.8,main="E [IBP(2) | First 2 Rows]")
 #    a.image(round(Ea,5),numbers=T,num.cex=.8,main="E [AIBP(2) | First 2 Rows,D]")
 #    a.image(round(Ed,5),numbers=T,num.cex=.7,main="E [ddIBP(2) | First 2 Rows,D]")
+#  par(mfrow=c(1,1))
+#dev.off()
+
+#uni <- one.sim("Duni",B=B,a=.5,printProgress=T)
+#temp <- one.sim("Duni",B=B,a=.5,printProgress=T)
+#pdf("../../../prospectus/images/uni.pdf")
+#  par(mfrow=c(3,1))
+#    a.image(round(uni$EZO,5),numbers=T,num.cex=.8,main="E [IBP(.5)]")
+#    a.image(round(uni$EZA,5),numbers=T,num.cex=.8,main="E [AIBP(.5) | f=1]")
+#    a.image(round(temp$EZO,5),numbers=T,num.cex=.8,main="E [ddIBP(.5) | f=1]")
 #  par(mfrow=c(1,1))
 #dev.off()
 
