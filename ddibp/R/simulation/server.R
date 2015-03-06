@@ -23,7 +23,7 @@ shinyServer(function(input,output) {
   
   result <- reactive({
     if (input$submit==0) return(NULL)
-    one.sim(paste0("D",input$distMatNum),a=input$alpha,B=input$its)
+    one.sim(paste0("D",input$distMatNum),a=input$alpha,B=input$its,printProg=T)
   })
 
   output$distMat = renderUI({

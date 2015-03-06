@@ -17,16 +17,19 @@ a.image <- function(Q,color=rev(heat.colors(100)),#paste0("gray",100:0),
   }
 
   if (numbers) {
-    #text(cbind(seq1[1:ncol(Q)],seq2[1:nrow(Q)],t(Q),col=numcolor,font=2))
-    for (x in 1:ncol(Q)) {
-      for (y in 1:nrow(Q)) {
-        text(seq1[x],seq2[y],t(Q)[x,y],col=numcolor,font=2,cex=num.cex)
-      }
-    }  
+    xx <- rep(1:ncol(Q),each=nrow(Q))
+    yy <- rep(1:nrow(Q),ncol(Q))
+    text(seq1[xx],seq2[yy],c(Q),col=numcolor,font=2,cex=num.cex)
+    #print(t(Q)[xx,yy])
+    #for (x in 1:ncol(Q)) {
+    #  for (y in 1:nrow(Q)) {
+    #    text(seq1[x],seq2[y],t(Q)[x,y],col=numcolor,font=2,cex=num.cex)
+    #  }
+    #}  
   }
 }
 
-X <- as.matrix(iris[1:5,1:4])
+#X <- as.matrix(iris[1:5,1:4])
 #X <- matrix(c(1,2,3,2,3,4,3,4,5),3,3,byrow=T)
 
 
