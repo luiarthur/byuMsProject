@@ -23,7 +23,7 @@
 \usecolortheme{seahorse}         % Determines the Color
 
 % my title:                                                               
-\title{The Indian Buffet Process}
+\title{Extending The Indian Buffet Process to Include Pairwise Distance Information}
 \author[Arthur Lui]{Arthur Lui}
 \institute[Brigham Young University]{
   Department of Statistics\\
@@ -34,7 +34,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <<design,echo=F>>=
-  source("../code/ibp.R",chdir=T)
+  #source("../code/ibp.R",chdir=T)
 @
   % 8 minutes
 \frame{\titlepage}
@@ -63,12 +63,12 @@
     \frametitle{Indian Buffet Process (IBP)}
     \beginmyfig
 
-<<fig=T,echo=F,height=5>>=
-    par(mfrow=c(1,2))
-      a.image(rIBP(50,2),main="Figure 1: IBP(N=50,a=2)",cex.main=.8)
-      a.image(rIBP(50,10),main="Figure 2: IBP(N=50,a=10)",cex.main=.8)
-    par(mfrow=c(1,1))
-@
+%<<fig=T,echo=F,height=5>>=
+%    par(mfrow=c(1,2))
+%      a.image(rIBP(50,2),main="Figure 1: IBP(N=50,a=2)",cex.main=.8)
+%      a.image(rIBP(50,10),main="Figure 2: IBP(N=50,a=10)",cex.main=.8)
+%    par(mfrow=c(1,1))
+%@
     \endmyfig
   }
 
@@ -200,35 +200,35 @@
   
   \frame{
     \frametitle{Data}
-    \beginmyfig
-      \vspace{-5mm}
-      \caption{One Observation Without Noise}
-      \vspace{-2mm}
-      \includegraphics{../code/draw.post.out/oneObs.pdf}
-      \vspace{-15mm}
-    \endmyfig
+    %\beginmyfig
+    %  \vspace{-5mm}
+    %  \caption{One Observation Without Noise}
+    %  \vspace{-2mm}
+    %  \includegraphics{../code/draw.post.out/oneObs.pdf}
+    %  \vspace{-15mm}
+    %\endmyfig
   }
 
   \frame{
     \frametitle{Data}
-    \beginmyfig
-      \vspace{-5mm}
-      \caption{One Observation + N(0,.5) Noise}
-      \vspace{-2mm}
-      \includegraphics{../code/draw.post.out/oneObsWithNoise.pdf}
-      \vspace{-15mm}
-    \endmyfig
+    %\beginmyfig
+    %  \vspace{-5mm}
+    %  \caption{One Observation + N(0,.5) Noise}
+    %  \vspace{-2mm}
+    %  \includegraphics{../code/draw.post.out/oneObsWithNoise.pdf}
+    %  \vspace{-15mm}
+    %\endmyfig
   }
 
   \frame{
     \frametitle{Data}
-    \beginmyfig
-      \vspace{-5mm}
-      \caption{Data From Ten Stat666 Students + N(0,.5) Noise}
-      \vspace{-2mm}
-      \includegraphics{../code/draw.post.out/Y.pdf}
-      \vspace{-15mm}
-    \endmyfig
+    %\beginmyfig
+    %  \vspace{-5mm}
+    %  \caption{Data From Ten Stat666 Students + N(0,.5) Noise}
+    %  \vspace{-2mm}
+    %  \includegraphics{../code/draw.post.out/Y.pdf}
+    %  \vspace{-15mm}
+    %\endmyfig
   }
 
 %\subsection{Data \& Results}
@@ -263,18 +263,18 @@
 %the matrices are changing, and the matrices are large. The execution time was
 %about 4 hours.\\
   \frame{
-    \frametitle{Diagnostics}
-    \beginmyfig
-      \includegraphics{../code/draw.post.out/traceplot.pdf}
-      \vspace{-15mm}
-    \endmyfig
+    %\frametitle{Diagnostics}
+    %\beginmyfig
+    %  \includegraphics{../code/draw.post.out/traceplot.pdf}
+    %  \vspace{-15mm}
+    %\endmyfig
   }
 
   \frame {
-    \frametitle{Diagnostics}
-    \beginmyfig
-      \includegraphics{../code/draw.post.out/postAlpha.pdf}
-    \endmyfig
+    %\frametitle{Diagnostics}
+    %\beginmyfig
+    %  \includegraphics{../code/draw.post.out/postAlpha.pdf}
+    %\endmyfig
   }  
 
 %\noindent
@@ -303,35 +303,35 @@
 %
   \frame{
     \frametitle{Posterior}
-    \beginmyfig
-      \vspace{-5mm}
-      \includegraphics{../code/draw.post.out/postZ.pdf}
-      \vspace{-15mm}
-      \caption{The posterior mean for $\bm Z$ computed by summing across
-               all the $\bm Z$ matrices drawn, then dividing by $4000$, the
-               the number of draws.}
-    \endmyfig
+    %\beginmyfig
+    %  \vspace{-5mm}
+    %  \includegraphics{../code/draw.post.out/postZ.pdf}
+    %  \vspace{-15mm}
+    %  \caption{The posterior mean for $\bm Z$ computed by summing across
+    %           all the $\bm Z$ matrices drawn, then dividing by $4000$, the
+    %           the number of draws.}
+    %\endmyfig
   }
 
   \frame{
     \frametitle{Posterior}
-    \beginmyfig
-      \vspace{-5mm}
-      \includegraphics{../code/draw.post.out/postA.pdf}
-      \vspace{-15mm}
-      \caption{The posterior mean for $\bm A$ was computed by calculating 
-               $E[\bm{A|Z}] = (\bm Z^T\bm Z + \frac{\sigma_X^2}{\sigma_A^2}
-               \textbf{I})^{-1}\bm Z^T \bm X$}.
-    \endmyfig
+    %\beginmyfig
+    %  \vspace{-5mm}
+    %  \includegraphics{../code/draw.post.out/postA.pdf}
+    %  \vspace{-15mm}
+    %  \caption{The posterior mean for $\bm A$ was computed by calculating 
+    %           $E[\bm{A|Z}] = (\bm Z^T\bm Z + \frac{\sigma_X^2}{\sigma_A^2}
+    %           \textbf{I})^{-1}\bm Z^T \bm X$}.
+    %\endmyfig
   }
 
   \frame{
     \frametitle{Posterior}
-    \beginmyfig
-      \includegraphics[height=.5\textwidth]{../code/draw.post.out/postA66.pdf}
-      %\includegraphics{../code/draw.post.out/postA66.pdf}
-      \caption{The latent features turned back into $6 \times 6$ images.}
-    \endmyfig
+    %\beginmyfig
+    %  \includegraphics[height=.5\textwidth]{../code/draw.post.out/postA66.pdf}
+    %  %\includegraphics{../code/draw.post.out/postA66.pdf}
+    %  \caption{The latent features turned back into $6 \times 6$ images.}
+    %\endmyfig
   }
 %
 %\noindent
@@ -347,19 +347,19 @@
 %
   \frame{
   \frametitle{Posterior}
-  \begin{figure}\begin{center}
-    %\includegraphics[height=1\textwidth]{../code/draw.post.out/postA66.pdf}
-    \includegraphics[height=.7\textwidth]{../code/draw.post.out/postFriends.pdf}
-    \caption{The latent features for each student $=\text{PostMean}(\bm {Z_iA})$.}
-  \end{center}\end{figure}
+  %\begin{figure}\begin{center}
+  %  %\includegraphics[height=1\textwidth]{../code/draw.post.out/postA66.pdf}
+  %  \includegraphics[height=.7\textwidth]{../code/draw.post.out/postFriends.pdf}
+  %  \caption{The latent features for each student $=\text{PostMean}(\bm {Z_iA})$.}
+  %\end{center}\end{figure}
   }
   
   \section{Model Checking}
   \frame{
-    \frametitle{Residuals}
-    \beginmyfig
-      \includegraphics{../code/draw.post.out/resid.pdf}
-    \endmyfig
+    %\frametitle{Residuals}
+    %\beginmyfig
+    %  \includegraphics{../code/draw.post.out/resid.pdf}
+    %\endmyfig
   }
 
   \frame{
