@@ -7,6 +7,7 @@
 \usepackage{mathtools}                                                    
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{amsmath} % multline
 \usepackage[UKenglish]{isodate} % for: \today                             
 \cleanlookdateon                % for: \today                             
                                                                           
@@ -60,20 +61,7 @@
     %\end{itemize}  
   }
       
-\section{Model}
-  \frame{
-    \frametitle{Indian Buffet Process (IBP)}
-    \beginmyfig
-
-<<fig=T,echo=F,height=5>>=
-    set.seed(1)
-    par(mfrow=c(1,2))
-      a.image(raibp(N=50,a=2),main="Figure 1: IBP(N=50, a=2)",cex.main=.8,axis.num=F)
-      a.image(raibp(N=50,a=10),main="Figure 2: IBP(N=50, a=10)",cex.main=.8,axis.num=F)
-    par(mfrow=c(1,1))
-@
-    \endmyfig
-  }
+\section{IBP}
 
   \frame{
     \frametitle{Indian Buffet Process (IBP)}
@@ -95,7 +83,7 @@
   }
 
   \frame{
-    \frametitle{Indian Buffet Process (IBP)}
+    \frametitle{PMF for the IBP}
       \[
       \begin{array}{rcl}
         \underset{N \times \infty}{\bm Z} &\sim& \text{IBP}(\alpha),
@@ -114,7 +102,21 @@
   }
 
   \frame{
-    \frametitle{The Attraction Indian Buffet Process (AIBP)}
+    \frametitle{Realizations from the IBP}
+    \beginmyfig
+<<fig=T,echo=F,height=5>>=
+    set.seed(1)
+    par(mfrow=c(1,2))
+      a.image(raibp(N=50,a=2),main="Figure 1: IBP(N=50, a=2)",cex.main=.8,axis.num=F)
+      a.image(raibp(N=50,a=10),main="Figure 2: IBP(N=50, a=10)",cex.main=.8,axis.num=F)
+    par(mfrow=c(1,1))
+@
+    \endmyfig
+  }
+
+\section{AIBP}  
+  \frame{
+    \frametitle{Attraction Indian Buffet Process (AIBP)}
     To obtain a realization $\bm Z$ from an AIBP($\alpha$) given a distance matrix $D$,
     which containts the distance information between each observation,
 
@@ -133,7 +135,25 @@
   }
   
   \frame{
-    
-  }
+    \frametitle{PMF for the AIBP}
+    \begin{multline*}
+      P(Z|D,\alpha) =
+      \\\\
+      \ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!} 
+      \prodl{i}{2}{N} i^{-(x_i+y_{-i})} \times
+      \\
+      \prodl{k}{1}{y_{-i}} 
+      \ds\frac{
+      %\left(\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)m_{-i}\right)^{z_{i,k}}
+      %\left(i-\sums{\sigma}{z_{-i,k}=1}{}
+      %\lambda(\sigma,\sigma_i)m_{-i}\right)^{1-z_{i,k}}
+      \left(\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}m_{-i}\right)^{z_{i,k}}
+      \left(i-\suml{j}{1}{i-1}
+      \lambda(\sigma_j,\sigma_i)z_{j,k}m_{-i}\right)^{1-z_{i,k}}
+      }
+      %{\suml{k}{1}{y_{-i}}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}\right)
+      {\suml{k}{1}{y_{-i}}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
+    \end{multline*}
+   }
 
 \end{document}
