@@ -111,8 +111,12 @@
         \implies \text{P}(\bm Z) & = & \frac{\alpha^{K}}{\prodl{i}{1}{N} 
                                        x_i!} 
                                        exp\{-\alpha H_N\}\prodl{k}{1}{K}
-                                       \frac{(N-m_k)!(m_k-1)!}{N!},
-
+                                       \frac{(N-m_k)!(m_k-1)!}{N!}\\
+                                 & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
+                                            {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
+                                       \prodl{i}{1}{N}\prodl{k}{1}{y_{i}}
+                                       \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
+                                       \left(1-\frac{m_{-i,k}}{i}\right)^{1-z_{i,k}}
       \end{array}  
       \]
       where $H_N$ is the harmonic number, $\suml{i}{1}{N}i^{-1}$, $K$
@@ -163,8 +167,8 @@
     \frametitle{PMF for the AIBP}
     \begin{multline*}
       P(\bm{Z|D},\alpha) = 
-        \ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!i^{x_i}} 
-        \prodl{i}{2}{N} p_{i,k}^{z_{i,k}} (1-p_{i,k})^{1-z_{i,k}}
+        \ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
+        \prodl{i}{2}{N}\prodl{k}{1}{y_i} p_{i,k}^{z_{i,k}} (1-p_{i,k})^{1-z_{i,k}}
       %\ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!} 
       %\prodl{i}{2}{N} i^{-(x_i+y_{-i})} \times 
       %\\
@@ -181,6 +185,28 @@
       %{\suml{k}{1}{y_{-i}}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
     \end{multline*}
   }
+
+  \frame{
+    \frametitle{PMF for the IBP \& AIBP}
+      \[
+      \begin{array}{rcl}
+        \text{IBP:} &&\\
+        \text{P}(\bm Z) & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
+                                   {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
+                              \prodl{i}{1}{N}\prodl{k}{1}{y_{i}}
+                              \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
+                              \left(1-\frac{m_{-i,k}}{i}\right)^{1-z_{i,k}}\\
+        &&\\
+        \text{AIBP:}&&\\
+        \text{P}(\bm{Z|D},\alpha) & = & 
+                              \frac{\alpha^K \exp(-\alpha H_N)} 
+                                   {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
+                              \prodl{i}{2}{N}\prodl{k}{1}{y_i} 
+                              p_{i,k}^{z_{i,k}} (1-p_{i,k})^{1-z_{i,k}}
+      \end{array}  
+      \]
+  }
+
 
   \frame{
     \frametitle{Realizations from the AIBP}
