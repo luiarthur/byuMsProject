@@ -164,7 +164,7 @@ f. <- function(x,i=2,draw=F,lam=inv,log=F) {
   if (is.null(K)) K <- 0
   h <- function(x,i,k) {
     out <- 0
-    if (sum(x[1:(i-1),k]>0)) {
+    if (sum(x[1:(i-1),k])>0) {
       ind <- which(x[1:(i-1),k]==1)
       out <- sum(lam(ind,i)) # sum of proximities for obs in col k that have dish k 
     }

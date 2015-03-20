@@ -18,8 +18,10 @@
 \def\prodl#1#2#3{\prod\limits_{#1=#2}^{#3}}                               
 \def\suml#1#2#3{\sum\limits_{#1=#2}^{#3}}                                 
 \def\ds{\displaystyle}                                                    
-\def\hik{\ds\frac{\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
-        {\suml{k}{1}{y_i}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}}
+%\def\hik{\ds\frac{\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
+%        {\suml{k}{1}{y_i}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}}
+\def\hik{\ds\frac{\suml{j}{1}{i-1}\lambda(j,i)z_{j,k}}
+        {\suml{k}{1}{y_i}\suml{j}{1}{i-1}\lambda(j,i)z_{j,k}}}
 
 % Beamer Stuff:
 \usepackage{beamerthemeHannover} % Determines the Theme
@@ -43,34 +45,52 @@
 \frame{\titlepage}
 \section{Introduction}
   \frame{
-    \frametitle{Introduction}
-    %\begin{itemize}
-    %  \item One challenge in latent variable modelling is predetermining
-    %        the number of latent variables generating the observations
-    %        % a type of latent variable model.
-    %        % Factor Analysis: Quant, Quant
-    %        % Latent Feature Model: Quant Obs, Cat Latent.
-    %        \wl
-    %  \item One type of latent variable model is the latent \textit{feature}
-    %        model, which consists of quantitative observations and binary latent
-    %        variables
-    %        \wl
-    %  \item The Indian Buffet Process offers a distribution for sparse
-    %        infinite binary matrices, which can serve as a prior distribution
-    %        for feature matrices in latent feature models
-    %\end{itemize}  
+    \frametitle{Latent Variable Models}
+    \begin{itemize}
+      \item[] Factor Analysis 
+      \begin{itemize}
+          \item[]
+          \item $\bm{y = \Lambda f + \epsilon}$, where $\bm\Lambda$ is a
+                matrix with continuous values, and $\bm f$ is a vector with
+                continuous values
+          \item[]
+          \item[]
+          \item Latent Feature Model
+          \begin{itemize}
+            \item $\bm{y = Zf + \epsilon}$, where $\bm Z$ is a matrix
+                  with binary values
+            %\item $\bm{y = X\beta + Z\gamma + \epsilon}?$
+          \end{itemize}
+          \item[]
+          \item Only $\bm y$ is observed
+      \end{itemize}
+
+      % Presentation Notes:
+      %\item One challenge in latent variable modelling is predetermining
+      %      the number of latent variables generating the observations
+      %      % a type of latent variable model.
+      %      % Factor Analysis: Quant, Quant
+      %      % Latent Feature Model: Quant Obs, Cat Latent.
+      %      \wl
+      %\item One type of latent variable model is the latent \textit{feature}
+      %      model, which consists of quantitative observations and binary latent
+      %      variables
+      %      \wl
+      %\item The Indian Buffet Process is a distribution for infinite and 
+      %      sparse binary matrices, which can serve as a prior distribution
+      %      for feature matrices in latent feature models
+    \end{itemize}  
   }
       
 \section{IBP}
 
   \frame{
     \frametitle{Indian Buffet Process (IBP)}
-    In the IBP, a customer $i$ taking a dish $k$ is analogous to 
-    observation $i$ possessing feautre $k$. This is indicated by setting 
-    $z_{ik}$ to 1 if the customer takes the dish, and 0 otherwise.\\
-    \wl\noindent
-    An IBP($\alpha$) for $N$ observations can be simulate as follows:
+    Customer $i$ taking a dish $k$ is analogous to observation $i$ possessing
+    feautre $k$. For $\bm Z \sim \text{IBP}_N(\alpha)$:\\
+    \wl
     \begin{enumerate}
+      \setlength\itemsep{1em}
       \item The first customer takes Poisson($\alpha$) number of dishes
       \item For customers $i=2 \text{ to } N$,
       \begin{itemize}
@@ -97,7 +117,7 @@
       \]
       where $H_N$ is the harmonic number, $\suml{i}{1}{N}i^{-1}$, $K$
       is the number of non-zero columns in $\bm Z$, $m_k$ is the $k^{th}$
-      column sum of $\bm Z$, and $x_i$ is the ``number of new dishes"
+      column sum of $\bm Z$, and $x_i$ is the number of ``new dishes"
       sampled by customer $i$.\\
   }
 
@@ -105,10 +125,16 @@
     \frametitle{Realizations from the IBP}
     \beginmyfig
 <<fig=T,echo=F,height=5>>=
-    set.seed(1)
+    set.seed(2)
     par(mfrow=c(1,2))
-      a.image(raibp(N=50,a=2),main="Figure 1: IBP(N=50, a=2)",cex.main=.8,axis.num=F)
-      a.image(raibp(N=50,a=10),main="Figure 2: IBP(N=50, a=10)",cex.main=.8,axis.num=F)
+      Z1 <- raibp(N=5,a=2)
+      a.image(Z1,main="Figure 1: IBP(N=50, a=2)",cex.main=.8,axis.num=F,color=c("gray100","gray30"))
+      axis(2,at=seq(1,0,len=nrow(Z1)),label=paste("Cust",1:nrow(Z1)),las=2)
+      axis(1,at=seq(0,1,len=ncol(Z1)),label=paste("Col",1:ncol(Z1)),las=2)
+      Z2 <- raibp(N=5,a=5)
+      a.image(Z2,main="Figure 2: IBP(N=50, a=5)",cex.main=.8,axis.num=F,col=c("gray100","gray30"))
+      axis(2,at=seq(1,0,len=nrow(Z2)),label=paste("Cust",1:nrow(Z2)),las=2)
+      axis(1,at=seq(0,1,len=ncol(Z2)),label=paste("Col",1:ncol(Z2)),las=2)
     par(mfrow=c(1,1))
 @
     \endmyfig
@@ -117,9 +143,8 @@
 \section{AIBP}  
   \frame{
     \frametitle{Attraction Indian Buffet Process (AIBP)}
-    To obtain a realization $\bm Z$ from an AIBP($\alpha$) given a distance matrix $D$,
-    which containts the distance information between each observation,
-
+    For $\bm Z \sim \text{AIBP}(\alpha,\bm D)$\\
+    \wl
     \begin{enumerate}
       \item The first customer takes Poisson($\alpha$) number of dishes
       \item For customers $i=2 \text{ to } N$,
@@ -130,30 +155,82 @@
               Poisson($\alpha/i$) new dishes
       \end{itemize}
     \end{enumerate}
-    where $p_{i,k} = \hik\frac{m_{-i}}{i}$, and $m_{-i}$ is the total number of 
-    dishes taken by each customer before customer $i$.
+    \wl
+    where $p_{i,k} = \hik\frac{m_{-i}}{i}$.
   }
   
   \frame{
     \frametitle{PMF for the AIBP}
     \begin{multline*}
-      P(Z|D,\alpha) =
-      \\\\
-      \ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!} 
-      \prodl{i}{2}{N} i^{-(x_i+y_{-i})} \times
-      \\
-      \prodl{k}{1}{y_{-i}} 
-      \ds\frac{
-      %\left(\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)m_{-i}\right)^{z_{i,k}}
-      %\left(i-\sums{\sigma}{z_{-i,k}=1}{}
-      %\lambda(\sigma,\sigma_i)m_{-i}\right)^{1-z_{i,k}}
-      \left(\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}m_{-i}\right)^{z_{i,k}}
-      \left(i-\suml{j}{1}{i-1}
-      \lambda(\sigma_j,\sigma_i)z_{j,k}m_{-i}\right)^{1-z_{i,k}}
-      }
-      %{\suml{k}{1}{y_{-i}}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}\right)
-      {\suml{k}{1}{y_{-i}}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
+      P(\bm{Z|D},\alpha) = 
+        \ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!i^{x_i}} 
+        \prodl{i}{2}{N} p_{i,k}^{z_{i,k}} (1-p_{i,k})^{1-z_{i,k}}
+      %\ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}x_i!} 
+      %\prodl{i}{2}{N} i^{-(x_i+y_{-i})} \times 
+      %\\
+      %\prodl{k}{1}{y_{-i}} 
+      %\ds\frac{
+      %%\left(\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)m_{-i}\right)^{z_{i,k}}
+      %%\left(i-\sums{\sigma}{z_{-i,k}=1}{}
+      %%\lambda(\sigma,\sigma_i)m_{-i}\right)^{1-z_{i,k}}
+      %\left(\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}m_{-i}\right)^{z_{i,k}}
+      %\left(i-\suml{j}{1}{i-1}
+      %\lambda(\sigma_j,\sigma_i)z_{j,k}m_{-i}\right)^{1-z_{i,k}}
+      %}
+      %%{\suml{k}{1}{y_{-i}}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}\right)
+      %{\suml{k}{1}{y_{-i}}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
     \end{multline*}
-   }
+  }
 
+  \frame{
+    \frametitle{Realizations from the AIBP}
+    \beginmyfig
+<<fig=T,echo=F,height=5>>=
+    set.seed(2)
+    DD <- matrix(c(0,9,1,9,9,
+                   9,0,9,9,1,
+                   1,9,0,9,9,
+                   9,9,9,0,9,
+                   9,1,9,9,0),5,5)
+    par(mfrow=c(1,3))
+      a.image(DD,axis.num=F,numbers=T,main="Distance Matrix (D)")
+      Z1 <- raibp(N=nrow(DD),D=DD,a=2)
+      a.image(Z1,main="Figure 1: AIBP(N=5, a=2, D)",cex.main=.8,axis.num=F,color=c("gray100","gray30"))
+      axis(2,at=seq(1,0,len=nrow(DD)),label=paste("Cust",1:nrow(DD)),las=2)
+      axis(1,at=seq(0,1,len=ncol(Z1)),label=paste("Col",1:ncol(Z1)),las=2)
+      Z2 <- raibp(N=nrow(DD),D=DD,a=5)
+      a.image(Z2,main="Figure 1: AIBP(N=5, a=5, D)",cex.main=.8,axis.num=F,color=c("gray100","gray30"))
+      axis(2,at=seq(1,0,len=nrow(DD)),label=paste("Cust",1:nrow(DD)),las=2)
+      axis(1,at=seq(0,1,len=ncol(Z2)),label=paste("Col",1:ncol(Z2)),las=2)
+    par(mfrow=c(1,1))
+@
+    \endmyfig 
+  }
+   
+
+  \frame{
+    \frametitle{Properties of the AIBP}
+
+    \begin{figure}\begin{center}
+      %\includegraphics[height=1\textwidth]{images/postA66.pdf}
+      \includegraphics{raw/uni.pdf}
+      \caption{The expected values of draws from the IBP were computed via simulation.
+               Ten thousand realizations were drawn from the IBP with $\alpha=.5$.
+               The ten thousand matrices were then summed across and divided by the
+               number of realizations (10,000). Because draws from the IBP do not
+               always have the same dimensions, each of the matrices were first padded
+               with zeros to make matrix summation conformable. Expected values were
+               computed in a similar way for the AIBP and ddIBP. In simulation, we
+               have shown that the AIBP and ddIBP reduce to the IBP when the similarity
+               function is set to a constant value. E[ncol] is the expected number of
+               columns for a given distribution. Values in the cells of the matrices
+               are the probabilities of those cells taking the value `1' as opposed
+               to 0. The colors are an additional indication of the probabilities,
+               red is used for cells with higher probability; white is used for cells
+               with lower probability. The numbers to the left of the grids are the 
+               expected row sums. The numbers at the bottom of the grids are the
+               expected column sums.}
+    \end{center}\end{figure}
+
+  }
 \end{document}
