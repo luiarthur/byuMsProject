@@ -117,7 +117,7 @@
                                        \prodl{i}{1}{N}\prodl{k}{1}{y_{i}}
                                        \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
                                        \left(1-\frac{m_{-i,k}}{i}\right)^{1-z_{i,k}}
-      \end{array}  
+      \end{array}
       \]
       where $H_N$ is the harmonic number, $\suml{i}{1}{N}i^{-1}$, $K$
       is the number of non-zero columns in $\bm Z$, $m_k$ is the $k^{th}$
