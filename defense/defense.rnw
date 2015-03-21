@@ -56,19 +56,15 @@
                 matrix with continuous values, and $\bm f$ is a vector with
                 continuous values
           \item[]
-          \item[]
           \item Latent Feature Model
           \begin{itemize}
-            \item $\bm{y = Zf + \epsilon}$, where $\bm Z$ is a matrix
-                  with binary values
-            \item The Indian buffet process is a suitable prior for 
-                  modeling $\bm Z$
+            \item $\bm{y = Zf + \epsilon}$, where $\bm Z$ is a binary matrix
+            \item $\bm{y = X\beta + Zf + \epsilon}$
+            \item $\bm Z$ can be modeled with an Indian buffet process prior
           \end{itemize}
-          \item[]
-          \item Only $\bm y$ is observed
+          \item[] \item Only $\bm y$ is observed 
       \end{itemize}
-
-      % Presentation Notes:
+% Presentation Notes:
       %\item One challenge in latent variable modelling is predetermining
       %      the number of latent variables generating the observations
       %      % a type of latent variable model.
