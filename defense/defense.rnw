@@ -47,7 +47,7 @@
 \frame{\titlepage}
 \section{Introduction}
   \frame{
-    \frametitle{Latent Variable Models}
+    \frametitle{What is it good for?}
     \begin{itemize}
       \item[] Factor Analysis 
       \begin{itemize}
@@ -107,8 +107,8 @@
       \item The first customer takes Poisson($\alpha$) number of dishes
       \item For customers $i=2 \text{ to } N$,
       \begin{itemize}
-        \item For each previously sampled dish,
-              customer $i$ takes dish $k$ with probability $m_k / i$
+        \item For each previously sampled dish, customer $i$ takes dish $k$
+              with probability $m_{-i,k} / i$
         \item after sampling the last sampled dish, customer $i$ samples 
               Poisson($\alpha/i$) new dishes
       \end{itemize}
@@ -147,12 +147,12 @@
     set.seed(2)
     par(mfrow=c(1,2))
       Z1 <- raibp(N=5,a=2)
-      a.image(Z1,main="Figure 1: IBP(N=50, a=2)",cex.main=.8,axis.num=F,
+      a.image(Z1,main="Figure 1: IBP(N=5, a=2)",cex.main=.8,axis.num=F,
               color=c("gray100","gray30"))
       axis(2,at=seq(1,0,len=nrow(Z1)),label=paste("Cust",1:nrow(Z1)),las=2)
       axis(1,at=seq(0,1,len=ncol(Z1)),label=paste("Col",1:ncol(Z1)),las=2)
       Z2 <- raibp(N=5,a=5)
-      a.image(Z2,main="Figure 2: IBP(N=50, a=5)",cex.main=.8,axis.num=F,
+      a.image(Z2,main="Figure 2: IBP(N=5, a=5)",cex.main=.8,axis.num=F,
               col=c("gray100","gray30"))
       axis(2,at=seq(1,0,len=nrow(Z2)),label=paste("Cust",1:nrow(Z2)),las=2)
       axis(1,at=seq(0,1,len=ncol(Z2)),label=paste("Col",1:ncol(Z2)),las=2)
@@ -275,7 +275,7 @@
     \end{table}
 
     The decay function used for this simulation study is the exponential decay
-    function $f(d) = exp(-d)$. Notice that $f(0)=1 \text{ and } f(\infty)=1$.
+    function $f(d) = exp(-d)$. Notice that $f(0)=1 \text{ and } f(\infty)=0$.
   }
 
   \frame{
@@ -334,9 +334,13 @@
         \hline
       \end{tabular}%
       }
-      \captionof{table} {Comparisons of the AIBP to the ddIBP showing how what 
-                         properties of the IBP they presrve.}
+      \captionof{table} {Comparisons of the AIBP to the ddIBP showing which 
+                         properties of the IBP they preserve.}
     \end{center}
+  }
+  
+  \frame{
+    \frametitle{Questions?}
   }
 
 \end{document}
