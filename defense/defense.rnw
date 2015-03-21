@@ -177,11 +177,11 @@
       \end{itemize}
     \end{enumerate}
     \wl
-    where $p_{i,k} = \hik\frac{m_{-i}}{i}$.
   }
   
   \frame{
     \frametitle{PMF for the AIBP}
+    For $\bm Z \sim \text{AIBP}(\alpha,\bm D)$\\
     \begin{multline*}
       P(\bm{Z|D},\alpha) = 
         \ds\frac{\alpha^K \exp(-\alpha H_N)} {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
@@ -202,8 +202,9 @@
       %{\suml{k}{1}{y_{-i}}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
     \end{multline*}
     where $\lambda(i,j) = f(d_{ij})$ and $f(.)$ is a decay function that
-    measures the proximity between customers $i$ and $j$, and $m_{-i}$ is the
-    total number of dishes taken by all customers before customer $i$.
+    measures the proximity between customers $i$ and $j$,  $m_{-i}$ is the
+    total number of dishes taken by all customers before customer $i$, and
+    $p_{i,k} = \hik\frac{m_{-i}}{i}$.
   }
 
   \frame{
