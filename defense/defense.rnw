@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{amsmath} % multline
+\usepackage{caption} %captionof
 \usepackage[UKenglish]{isodate} % for: \today                             
 \cleanlookdateon                % for: \today                             
                                                                           
@@ -20,7 +21,7 @@
 \def\ds{\displaystyle}                                                    
 %\def\hik{\ds\frac{\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
 %        {\suml{k}{1}{y_i}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}}
-\def\hik{\ds\frac{\suml{j}{1}{i-1}\lambda(j,i)z_{j,k}}
+\def\hik{\frac{\suml{j}{1}{i-1}\lambda(j,i)z_{j,k}}
         {\suml{k}{1}{y_i}\suml{j}{1}{i-1}\lambda(j,i)z_{j,k}}}
 
 % Beamer Stuff:
@@ -29,6 +30,7 @@
 
 % my title:                                                               
 \title{Extending The Indian Buffet Process to Include Pairwise Distance Information}
+%\logo{\includegraphics[width=1cm,height=1cm,keepspectration]{/data/arthurll/Pictures/logo.png}}
 \author[Arthur Lui]{Arthur Lui}
 \institute[Brigham Young University]{
   Department of Statistics\\
@@ -59,7 +61,8 @@
           \begin{itemize}
             \item $\bm{y = Zf + \epsilon}$, where $\bm Z$ is a matrix
                   with binary values
-            %\item $\bm{y = X\beta + Z\gamma + \epsilon}?$
+            \item The Indian buffet process is a suitable prior for 
+                  modeling $\bm Z$
           \end{itemize}
           \item[]
           \item Only $\bm y$ is observed
@@ -81,9 +84,23 @@
       %      for feature matrices in latent feature models
     \end{itemize}  
   }
-      
-\section{IBP}
 
+  \frame{
+    \frametitle{Research Goals}
+    \begin{itemize}
+      \item Propose a distribution that extends the IBP to include distance
+            information
+        \begin{itemize}
+          \item[]
+          \item The distance dependent IBP (ddIBP) constructed by Gershman, et al.,
+                (2012) has only an implicit pmf
+          \item[]
+          \item We will propose a distribution with an explicit pmf      
+        \end{itemize}
+    \end{itemize}
+  }
+
+\section{IBP}
   \frame{
     \frametitle{Indian Buffet Process (IBP)}
     Customer $i$ taking a dish $k$ is analogous to observation $i$ possessing
@@ -114,14 +131,16 @@
                                        \frac{(N-m_k)!(m_k-1)!}{N!}\\
                                  & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
                                             {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
-                                       \prodl{i}{1}{N}\prodl{k}{1}{y_{i}}
+                                       \prodl{i}{2}{N}\prodl{k}{1}{y_{i}}
                                        \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
                                        \left(1-\frac{m_{-i,k}}{i}\right)^{1-z_{i,k}}
       \end{array}
       \]
-      where $H_N$ is the harmonic number, $\suml{i}{1}{N}i^{-1}$, $K$
-      is the number of non-zero columns in $\bm Z$, $m_k$ is the $k^{th}$
-      column sum of $\bm Z$, and $x_i$ is the number of ``new dishes"
+      where $H_N$ is the harmonic number $\suml{i}{1}{N}i^{-1}$, $K$ is the
+      number of non-zero columns in $\bm Z$, $m_k$ is the $k^{th}$ column sum
+      of $\bm Z$, $y_i$ is the total number of dishes sampled before the
+      $i^{th}$ customer, $m_{-i,k}$ is the number of customers that sampled
+      dish k before customer $i$,and $x_i$ is the number of ``new dishes"
       sampled by customer $i$.\\
   }
 
@@ -132,11 +151,13 @@
     set.seed(2)
     par(mfrow=c(1,2))
       Z1 <- raibp(N=5,a=2)
-      a.image(Z1,main="Figure 1: IBP(N=50, a=2)",cex.main=.8,axis.num=F,color=c("gray100","gray30"))
+      a.image(Z1,main="Figure 1: IBP(N=50, a=2)",cex.main=.8,axis.num=F,
+              color=c("gray100","gray30"))
       axis(2,at=seq(1,0,len=nrow(Z1)),label=paste("Cust",1:nrow(Z1)),las=2)
       axis(1,at=seq(0,1,len=ncol(Z1)),label=paste("Col",1:ncol(Z1)),las=2)
       Z2 <- raibp(N=5,a=5)
-      a.image(Z2,main="Figure 2: IBP(N=50, a=5)",cex.main=.8,axis.num=F,col=c("gray100","gray30"))
+      a.image(Z2,main="Figure 2: IBP(N=50, a=5)",cex.main=.8,axis.num=F,
+              col=c("gray100","gray30"))
       axis(2,at=seq(1,0,len=nrow(Z2)),label=paste("Cust",1:nrow(Z2)),las=2)
       axis(1,at=seq(0,1,len=ncol(Z2)),label=paste("Col",1:ncol(Z2)),las=2)
     par(mfrow=c(1,1))
@@ -184,6 +205,9 @@
       %%{\suml{k}{1}{y_{-i}}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}\right)
       %{\suml{k}{1}{y_{-i}}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
     \end{multline*}
+    where $\lambda(i,j) = f(d_{ij})$ and $f(.)$ is a decay function that
+    measures the proximity between customers $i$ and $j$, and $m_{-i}$ is the
+    total number of dishes taken by all customers before customer $i$.
   }
 
   \frame{
@@ -193,7 +217,7 @@
         \text{IBP:} &&\\
         \text{P}(\bm Z) & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
                                    {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
-                              \prodl{i}{1}{N}\prodl{k}{1}{y_{i}}
+                              \prodl{i}{2}{N}\prodl{k}{1}{y_{i}}
                               \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
                               \left(1-\frac{m_{-i,k}}{i}\right)^{1-z_{i,k}}\\
         &&\\
@@ -206,7 +230,6 @@
       \end{array}  
       \]
   }
-
 
   \frame{
     \frametitle{Realizations from the AIBP}
@@ -221,11 +244,13 @@
     par(mfrow=c(1,3))
       a.image(DD,axis.num=F,numbers=T,main="Distance Matrix (D)")
       Z1 <- raibp(N=nrow(DD),D=DD,a=2)
-      a.image(Z1,main="Figure 1: AIBP(N=5, a=2, D)",cex.main=.8,axis.num=F,color=c("gray100","gray30"))
+      a.image(Z1,main="Figure 1: AIBP(N=5, a=2, D)",cex.main=.8,axis.num=F,
+              color=c("gray100","gray30"))
       axis(2,at=seq(1,0,len=nrow(DD)),label=paste("Cust",1:nrow(DD)),las=2)
       axis(1,at=seq(0,1,len=ncol(Z1)),label=paste("Col",1:ncol(Z1)),las=2)
       Z2 <- raibp(N=nrow(DD),D=DD,a=5)
-      a.image(Z2,main="Figure 1: AIBP(N=5, a=5, D)",cex.main=.8,axis.num=F,color=c("gray100","gray30"))
+      a.image(Z2,main="Figure 1: AIBP(N=5, a=5, D)",cex.main=.8,axis.num=F,
+              color=c("gray100","gray30"))
       axis(2,at=seq(1,0,len=nrow(DD)),label=paste("Cust",1:nrow(DD)),las=2)
       axis(1,at=seq(0,1,len=ncol(Z2)),label=paste("Col",1:ncol(Z2)),las=2)
     par(mfrow=c(1,1))
@@ -233,30 +258,88 @@
     \endmyfig 
   }
    
+\section{Comparisons}
+  \frame{
+    \frametitle{Distance Matrix \& Decay Function}
+    \begin{table}[ht]
+    \centering
+    \[
+      \begin{pmatrix}{}
+        0 & 9 & 1 & 9 & 9 \\ 
+        9 & 0 & 9 & 9 & 1 \\ 
+        1 & 9 & 0 & 9 & 9 \\ 
+        9 & 9 & 9 & 0 & 9 \\ 
+        9 & 1 & 9 & 9 & 0 \\ 
+      \end{pmatrix}
+    \]
+    \caption{Distance Matrix used in this simulation study. Notice that
+             all customers are equidistant from each other except for 
+             customers 1 \& 3 and 2 \& 5, who are much closer together.}
+    \end{table}
+
+    The decay function used for this simulation study is the exponential decay
+    function $f(d) = exp(-d)$. Notice that $f(0)=1 \text{ and } f(\infty)=1$.
+  }
+
+  \frame{
+    \frametitle{Comparisons of Expected Values for Equidistant Observations}
+    \begin{figure}\begin{center}
+      \includegraphics[height=.7\textwidth]{raw/uni.pdf}
+      %\caption{The expected values of draws from the IBP were computed via
+      %         simulation.  Ten thousand realizations were drawn from the IBP
+      %         with $\alpha=.5$.  The ten thousand matrices were then summed
+      %         across and divided by the number of realizations (10,000).
+      %         Because draws from the IBP do not always have the same
+      %         dimensions, each of the matrices were first padded with zeros to
+      %         make matrix summation conformable. Expected values were computed
+      %         in a similar way for the AIBP and ddIBP. In simulation, we have
+      %         shown that the AIBP and ddIBP reduce to the IBP when the
+      %         similarity function is set to a constant value. E[ncol] is the
+      %         expected number of columns for a given distribution. Values in
+      %         the cells of the matrices are the probabilities of those cells
+      %         taking the value `1' as opposed to 0. The colors are an
+      %         additional indication of the probabilities, red is used for
+      %         cells with higher probability; white is used for cells with
+      %         lower probability. The numbers to the left of the grids are the
+      %         expected row sums. The numbers at the bottom of the grids are
+      %         the expected column sums.}
+    \end{center}\end{figure}
+  }
+
+  \frame{
+    \frametitle{Expectations given a Distance Matrix}
+    \begin{figure}\begin{center}
+      \includegraphics[height=.7\textwidth]{raw/eSim.pdf}
+      %\caption{NEED A CAPTION!}
+    \end{center}\end{figure}
+  }
+
+  \frame{
+    \frametitle{Expectations given a Distance Matrix and First Two Rows}
+    \begin{figure}\begin{center}
+      \includegraphics[height=.7\textwidth]{raw/eSimFixed.pdf}
+      %\caption{NEED A CAPTION!}
+    \end{center}\end{figure}
+  }
 
   \frame{
     \frametitle{Properties of the AIBP}
-
-    \begin{figure}\begin{center}
-      %\includegraphics[height=1\textwidth]{images/postA66.pdf}
-      \includegraphics{raw/uni.pdf}
-      \caption{The expected values of draws from the IBP were computed via simulation.
-               Ten thousand realizations were drawn from the IBP with $\alpha=.5$.
-               The ten thousand matrices were then summed across and divided by the
-               number of realizations (10,000). Because draws from the IBP do not
-               always have the same dimensions, each of the matrices were first padded
-               with zeros to make matrix summation conformable. Expected values were
-               computed in a similar way for the AIBP and ddIBP. In simulation, we
-               have shown that the AIBP and ddIBP reduce to the IBP when the similarity
-               function is set to a constant value. E[ncol] is the expected number of
-               columns for a given distribution. Values in the cells of the matrices
-               are the probabilities of those cells taking the value `1' as opposed
-               to 0. The colors are an additional indication of the probabilities,
-               red is used for cells with higher probability; white is used for cells
-               with lower probability. The numbers to the left of the grids are the 
-               expected row sums. The numbers at the bottom of the grids are the
-               expected column sums.}
-    \end{center}\end{figure}
-
+    \begin{center}
+      \resizebox{.8\textwidth}{!}{%
+      \begin{tabular}{c|c|c}
+        \hline
+          Comparison & AIBP & ddIBP \\ \hline \hline
+          Explicit pmf & Yes & No \\ \hline
+          Expected non-zero columns equal to that of IBP & Yes & No \\ \hline
+          Expected row sums equal to that of IBP & Yes & Yes \\ \hline
+          Expected column sums equal to that of IBP & No & No \\ \hline
+          Expected matrix sum equal to that of IBP & Yes & Yes \\ \hline
+        \hline
+      \end{tabular}%
+      }
+      \captionof{table} {Comparisons of the AIBP to the ddIBP showing how what 
+                         properties of the IBP they presrve.}
+    \end{center}
   }
+
 \end{document}

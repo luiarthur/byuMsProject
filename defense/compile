@@ -3,5 +3,5 @@
 Sweave("defense.rnw")
 system("pdflatex defense.tex")
 system("pdflatex defense.tex")
-system("firefox defense.pdf &")
+#system("firefox defense.pdf &")
 system("rm -f defense-*.pdf *.log *.aux *.tex *.out *.snm *.toc *.nav")
