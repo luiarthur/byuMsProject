@@ -25,11 +25,15 @@
         {\suml{k}{1}{y_i}\suml{j}{1}{i-1}\lambda(j,i)z_{j,k}}}
 
 % Beamer Stuff:
-\usepackage{beamerthemeHannover} % Determines the Theme
-\usecolortheme{seahorse}         % Determines the Color
+%\usepackage{beamerthemeHannover} % Determines the Theme
+%\usecolortheme{seahorse}         % Determines the Color
+\usepackage{beamerthemeBoadilla} % Determines the Theme
+\usecolortheme{beaver}         % Determines the Color
+%\usecolortheme{metropolis}         % Determines the Color
+%\usepackage{beamerthemem}
 
 % my title:                                                               
-\title{Extending The Indian Buffet Process to Include Pairwise Distance Information}
+\title[The Attraction Indian Buffet Process]{Extending The Indian Buffet Process to Include Pairwise Distance Information}
 %\logo{\includegraphics[width=1cm,height=1cm,keepspectration]{/data/arthurll/Pictures/logo.png}}
 \author[Arthur Lui]{Arthur Lui}
 \institute[Brigham Young University]{
@@ -47,7 +51,7 @@
 \frame{\titlepage}
 \section{Introduction}
   \frame{
-    \frametitle{What is it good for?}
+    \frametitle{Why use the IBP?}
     \begin{itemize}
       \item[] Factor Analysis 
       \begin{itemize}
@@ -59,7 +63,7 @@
           \item Latent Feature Model
           \begin{itemize}
             \item $\bm{y = Zf + \epsilon}$, where $\bm Z$ is a binary matrix
-            \item $\bm{y = X\beta + Zf + \epsilon}$
+            %\item $\bm{y = X\beta + Zf + \epsilon}$
             \item $\bm Z$ can be modeled with an Indian buffet process prior
           \end{itemize}
           \item[] \item Only $\bm y$ is observed 
@@ -143,7 +147,7 @@
   \frame{
     \frametitle{Realizations from the IBP}
     \beginmyfig
-<<fig=T,echo=F,height=5>>=
+<<fig=T,echo=F,height=3>>=
     set.seed(2)
     par(mfrow=c(1,2))
       Z1 <- raibp(N=5,a=2)
@@ -164,20 +168,38 @@
 \section{AIBP}  
   \frame{
     \frametitle{Attraction Indian Buffet Process (AIBP)}
-    For $\bm Z \sim \text{AIBP}(\alpha,\bm D)$\\
+    For $\bm Z \sim \text{AIBP}_N(\alpha,\bm D)$:\\
     \wl
     \begin{enumerate}
       \item The first customer takes Poisson($\alpha$) number of dishes
       \item For customers $i=2 \text{ to } N$,
       \begin{itemize}
-        \item For each previously sampled dish,
-              customer $i$ takes dish $k$ with probability $p_{i,k}$
+        \item For each previously sampled dish, customer $i$ takes dish $k$ 
+              with probability $p_{i,k}$
         \item after sampling the last sampled dish, customer $i$ samples 
               Poisson($\alpha/i$) new dishes
       \end{itemize}
     \end{enumerate}
     \wl
   }
+
+  \frame{
+    \frametitle{Indian Buffet Process (IBP)}
+    For $\bm Z \sim \text{IBP}_N(\alpha)$:\\
+    \wl
+    \begin{enumerate}
+      \item The first customer takes Poisson($\alpha$) number of dishes
+      \item For customers $i=2 \text{ to } N$,
+      \begin{itemize}
+        \item For each previously sampled dish, customer $i$ takes dish $k$ 
+              with probability $m_{i,k}/i$
+        \item after sampling the last sampled dish, customer $i$ samples 
+              Poisson($\alpha/i$) new dishes
+      \end{itemize}
+    \end{enumerate}
+    \wl
+  }
+
   
   \frame{
     \frametitle{PMF for the AIBP}
@@ -212,7 +234,7 @@
       \[
       \begin{array}{rcl}
         \text{IBP:} &&\\
-        \text{P}(\bm Z) & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
+        \text{P}(\bm Z|\alpha) & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
                                    {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
                               \prodl{i}{2}{N}\prodl{k}{1}{y_{i}}
                               \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
@@ -231,7 +253,7 @@
   \frame{
     \frametitle{Realizations from the AIBP}
     \beginmyfig
-<<fig=T,echo=F,height=5>>=
+<<fig=T,echo=F,height=3>>=
     set.seed(2)
     DD <- matrix(c(0,9,1,9,9,
                    9,0,9,9,1,
@@ -281,7 +303,7 @@
   \frame{
     \frametitle{Comparisons of Expected Values for Equidistant Observations}
     \begin{figure}\begin{center}
-      \includegraphics[height=.7\textwidth]{raw/uni.pdf}
+      \includegraphics[height=.6\textwidth]{raw/uni.pdf}
       %\caption{The expected values of draws from the IBP were computed via
       %         simulation.  Ten thousand realizations were drawn from the IBP
       %         with $\alpha=.5$.  The ten thousand matrices were then summed
@@ -306,7 +328,7 @@
   \frame{
     \frametitle{Expectations given a Distance Matrix}
     \begin{figure}\begin{center}
-      \includegraphics[height=.7\textwidth]{raw/eSim.pdf}
+      \includegraphics[height=.6\textwidth]{raw/eSim.pdf}
       %\caption{NEED A CAPTION!}
     \end{center}\end{figure}
   }
@@ -314,7 +336,7 @@
   \frame{
     \frametitle{Expectations given a Distance Matrix and First Two Rows}
     \begin{figure}\begin{center}
-      \includegraphics[height=.7\textwidth]{raw/eSimFixed.pdf}
+      \includegraphics[height=.6\textwidth]{raw/eSimFixed.pdf}
       %\caption{NEED A CAPTION!}
     \end{center}\end{figure}
   }
@@ -341,6 +363,10 @@
   
   \frame{
     \frametitle{Questions?}
+    \begin{center}
+      \Huge Thank You!
+    \end{center}
   }
+
 
 \end{document}
