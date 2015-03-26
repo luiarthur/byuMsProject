@@ -29,6 +29,7 @@
 %\usecolortheme{seahorse}         % Determines the Color
 \usepackage{beamerthemeBoadilla} % Determines the Theme
 \usecolortheme{beaver}         % Determines the Color
+\beamertemplatenavigationsymbolsempty
 %\usecolortheme{metropolis}         % Determines the Color
 %\usepackage{beamerthemem}
 
@@ -58,13 +59,13 @@
           \item[]
           \item[] \item Only $\bm y$ is observed 
           \item[]
-          \item $\bm{y = \Lambda f + \epsilon}$, where $\bm\Lambda$ is a
+          \item $\bm{Y = F\Lambda + \epsilon}$, where $\bm\Lambda$ is a
                 matrix with continuous values, and $\bm f$ is a vector with
                 continuous values
           \item[]
           \item Latent Feature Model
           \begin{itemize}
-            \item $\bm{y = Zf + \epsilon}$, where $\bm Z$ is a binary matrix
+            \item $\bm{Y = ZA + \epsilon}$, where $\bm Z$ is a binary matrix
             %\item $\bm{y = X\beta + Zf + \epsilon}$
             \item $\bm Z$ can be modeled with an Indian buffet process prior
           \end{itemize}
@@ -84,6 +85,20 @@
       %      sparse binary matrices, which can serve as a prior distribution
       %      for feature matrices in latent feature models
     \end{itemize}  
+  }
+
+  \frame{
+    \begin{figure}\begin{center}
+      \includegraphics[width=.75\columnwidth]{raw/scatter.pdf}
+      %\caption{NEED A CAPTION!}
+    \end{center}\end{figure}
+  }
+
+  \frame{
+    \begin{figure}\begin{center}
+      \includegraphics[width=.75\columnwidth]{raw/clusScatter.pdf}
+      %\caption{NEED A CAPTION!}
+    \end{center}\end{figure}
   }
 
   \frame{
