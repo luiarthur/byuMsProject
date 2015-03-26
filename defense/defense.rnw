@@ -56,6 +56,8 @@
       \item[] Factor Analysis 
       \begin{itemize}
           \item[]
+          \item[] \item Only $\bm y$ is observed 
+          \item[]
           \item $\bm{y = \Lambda f + \epsilon}$, where $\bm\Lambda$ is a
                 matrix with continuous values, and $\bm f$ is a vector with
                 continuous values
@@ -66,7 +68,6 @@
             %\item $\bm{y = X\beta + Zf + \epsilon}$
             \item $\bm Z$ can be modeled with an Indian buffet process prior
           \end{itemize}
-          \item[] \item Only $\bm y$ is observed 
       \end{itemize}
 % Presentation Notes:
       %\item One challenge in latent variable modelling is predetermining
@@ -108,40 +109,19 @@
     \wl
     \begin{enumerate}
       \setlength\itemsep{1em}
+      \pause
       \item The first customer takes Poisson($\alpha$) number of dishes
+      \pause
       \item For customers $i=2 \text{ to } N$,
       \begin{itemize}
+        \pause
         \item For each previously sampled dish, customer $i$ takes dish $k$
               with probability $m_{-i,k} / i$
+              \pause
         \item after sampling the last sampled dish, customer $i$ samples 
               Poisson($\alpha/i$) new dishes
       \end{itemize}
     \end{enumerate}
-  }
-
-  \frame{
-    \frametitle{PMF for the IBP}
-      \[
-      \begin{array}{rcl}
-        \underset{N \times \infty}{\bm Z} &\sim& \text{IBP}(\alpha),
-           \text{ where $z_{ik} \in \{0,1\}$} \\
-        \implies \text{P}(\bm Z) & = & \frac{\alpha^{K}}{\prodl{i}{1}{N} 
-                                       x_i!} 
-                                       exp\{-\alpha H_N\}\prodl{k}{1}{K}
-                                       \frac{(N-m_k)!(m_k-1)!}{N!}\\
-                                 & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
-                                            {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
-                                       \prodl{i}{2}{N}\prodl{k}{1}{y_{i}}
-                                       \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
-                                       \left(1-\frac{m_{-i,k}}{i}\right)^{1-z_{i,k}}
-      \end{array}
-      \]
-      where $H_N$ is the harmonic number $\suml{i}{1}{N}i^{-1}$, $K$ is the
-      number of non-zero columns in $\bm Z$, $m_k$ is the $k^{th}$ column sum
-      of $\bm Z$, $y_i$ is the total number of dishes sampled before the
-      $i^{th}$ customer, $m_{-i,k}$ is the number of customers that sampled
-      dish k before customer $i$,and $x_i$ is the number of ``new dishes"
-      sampled by customer $i$.\\
   }
 
   \frame{
@@ -163,6 +143,33 @@
     par(mfrow=c(1,1))
 @
     \endmyfig
+  }
+
+  \frame{
+    \frametitle{PMF for the IBP}
+      \[
+      \begin{array}{rcl}
+        \underset{N \times \infty}{\bm Z} &\sim& \text{IBP}(\alpha),
+           \text{ where $z_{ik} \in \{0,1\}$} \\
+        \implies \text{P}(\bm Z) & = & \frac{\alpha^{K}}{\prodl{i}{1}{N} 
+                                       x_i!} 
+                                       exp\{-\alpha H_N\}\prodl{k}{1}{K}
+                                       \frac{(N-m_k)!(m_k-1)!}{N!}\\
+                                 \pause
+                                 & = & \frac{\alpha^{K}exp\{-\alpha H_N\}}
+                                            {\prodl{i}{1}{N}(x_i!~i^{x_i})} 
+                                       \prodl{i}{2}{N}\prodl{k}{1}{y_{i}}
+                                       \left(\frac{m_{-i,k}}{i}\right)^{z_{i,k}}
+                                       \left(1-\frac{m_{-i,k}}{i}\right)^{1-z_{i,k}}
+      \end{array}
+      \]
+      \pause
+      where $H_N$ is the harmonic number $\suml{i}{1}{N}i^{-1}$, $K$ is the
+      number of non-zero columns in $\bm Z$, $m_k$ is the $k^{th}$ column sum
+      of $\bm Z$, $y_i$ is the total number of dishes sampled before the
+      $i^{th}$ customer, $m_{-i,k}$ is the number of customers that sampled
+      dish k before customer $i$,and $x_i$ is the number of ``new dishes"
+      sampled by customer $i$.\\
   }
 
 \section{AIBP}  
@@ -192,7 +199,7 @@
       \item For customers $i=2 \text{ to } N$,
       \begin{itemize}
         \item For each previously sampled dish, customer $i$ takes dish $k$ 
-              with probability $m_{i,k}/i$
+              with probability $m_{-i,k}/i$
         \item after sampling the last sampled dish, customer $i$ samples 
               Poisson($\alpha/i$) new dishes
       \end{itemize}
@@ -200,7 +207,24 @@
     \wl
   }
 
-  
+  \frame{
+    \frametitle{Attraction Indian Buffet Process (AIBP)}
+    For $\bm Z \sim \text{AIBP}_N(\alpha,\bm D)$:\\
+    \wl
+    \begin{enumerate}
+      \item The first customer takes Poisson($\alpha$) number of dishes
+      \item For customers $i=2 \text{ to } N$,
+      \begin{itemize}
+        \item For each previously sampled dish, customer $i$ takes dish $k$ 
+              with probability $p_{i,k}$
+        \item after sampling the last sampled dish, customer $i$ samples 
+              Poisson($\alpha/i$) new dishes
+      \end{itemize}
+    \end{enumerate}
+    \wl
+  }
+
+
   \frame{
     \frametitle{PMF for the AIBP}
     For $\bm Z \sim \text{AIBP}(\alpha,\bm D)$\\
@@ -223,10 +247,10 @@
       %%{\suml{k}{1}{y_{-i}}\sums{\sigma}{z_{-i,k}=1}{}\lambda(\sigma,\sigma_i)}\right)
       %{\suml{k}{1}{y_{-i}}\suml{j}{1}{i-1}\lambda(\sigma_j,\sigma_i)z_{j,k}}
     \end{multline*}
-    where $\lambda(i,j) = f(d_{ij})$ and $f(.)$ is a decay function that
-    measures the proximity between customers $i$ and $j$,  $m_{-i}$ is the
-    total number of dishes taken by all customers before customer $i$, and
-    $p_{i,k} = \hik\frac{m_{-i}}{i}$.
+    where $p_{i,k} = \hik\frac{m_{-i}}{i}$, $\lambda(i,j) = f(d_{ij})$ and
+    $f(.)$ is a decay function that measures the proximity between customers
+    $i$ and $j$, and $m_{-i}$ is the total number of dishes taken by all
+    customers before customer $i$.
   }
 
   \frame{
@@ -276,6 +300,7 @@
 @
     \endmyfig 
   }
+  
    
 \section{Comparisons}
   \frame{
@@ -361,6 +386,14 @@
     \end{center}
   }
   
+  \frame{
+    \frametitle{Future Work}
+    \begin{itemize}
+      \item modify the aIBP % Not clear if the E[ncol] thing is important
+      \item posterior inference
+    \end{itemize}
+  }
+
   \frame{
     \frametitle{Questions?}
     \begin{center}
