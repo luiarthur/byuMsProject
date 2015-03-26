@@ -59,13 +59,12 @@
           \item[]
           \item[] \item Only $\bm y$ is observed 
           \item[]
-          \item $\bm{Y = F\Lambda + \epsilon}$, where $\bm\Lambda$ is a
-                matrix with continuous values, and $\bm f$ is a vector with
-                continuous values
+          \item $\bm{Y = F\Lambda + \epsilon}$, where $\bm F$ and $\bm\Lambda$ 
+                         are matrices with continuous values
           \item[]
           \item Latent Feature Model
           \begin{itemize}
-            \item $\bm{Y = ZA + \epsilon}$, where $\bm Z$ is a binary matrix
+            \item $\bm{Y = Z\Lambda + \epsilon}$, where $\bm Z$ is a binary matrix
             %\item $\bm{y = X\beta + Zf + \epsilon}$
             \item $\bm Z$ can be modeled with an Indian buffet process prior
           \end{itemize}

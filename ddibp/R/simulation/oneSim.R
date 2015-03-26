@@ -181,7 +181,7 @@ one.sim <- function(D.name,a,B=1e4,num.cex=1,printProgress=F,lF=function(x) 1) {
 ##Comment out:
 ## Graphs:
 #source("ddibp.R")
-#a <- 1.5
+#a <- 2
 #result <- one.sim("D54",a=a,B=10000,printProg=T,lF=exp.f)
 #result <- one.sim("D55",a=a,B=10000,printProg=T,lF=exp.f)
 #result <- one.sim("D71",a=a,B=10000,printProg=T,lF=exp.f)
