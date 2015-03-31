@@ -1,5 +1,6 @@
 source("aibp2.R")
 source("countdown.R")
+library(xtable)
 library(doMC) 
 registerDoMC(system("nproc",intern=TRUE))
 
@@ -55,14 +56,17 @@ EOc <- calc.settings(Zo) #128
 EZc <- calc.settings(Zs) #128
 EPc <- calc.settings(Zp) #165
 
-par(mfrow=c(3,2))
-  a.image(round(EO,3),numbers=TRUE,main="IBP")
-  a.image(round(EOc,3),numbers=TRUE,main="IBP")
-  a.image(round(EZ,3),numbers=TRUE,main="Not Permuted")
-  a.image(round(EZc,3),numbers=TRUE,main="Not Permuted")
-  a.image(round(EP,3),numbers=TRUE,main="Permuted")
-  a.image(round(EPc,3),numbers=TRUE,main="Permuted")
-par(mfrow=c(1,1))
+plot.sim <- function(sf=3) { # sf = significant figures
+  par(mfrow=c(3,2))
+    a.image(round(EO,sf),numbers=TRUE,main="IBP")
+    a.image(round(EOc,sf),numbers=TRUE,main="IBP")
+    a.image(round(EZ,sf),numbers=TRUE,main="Not Permuted")
+    a.image(round(EZc,sf),numbers=TRUE,main="Not Permuted")
+    a.image(round(EP,sf),numbers=TRUE,main="Permuted")
+    a.image(round(EPc,sf),numbers=TRUE,main="Permuted")
+  par(mfrow=c(1,1))
+}
+plot.sim()
 
 # THIS IS ALSO IMPORTANT: Make sure the permuted version reduces to the IBP
 # when the observations are equidistant.
@@ -71,7 +75,19 @@ par(mfrow=c(1,1))
 #  a.image(round(EOp,3),numbers=TRUE,main="IBP Permuted")
 #par(mfrow=c(1,1))
 
-up <- unique.matrix(Zp)
-which(up[[1]] > B*.001)
-up[[1]][1:10]
-up[[2]][1:10]
+#up <- unique.matrix(Zp)
+#which(up[[1]] > B*.001)
+#up[[1]][1:10]
+#up[[2]][1:10]
+#
+#pdf("www/sim.pdf")
+#  plot.sim()
+#dev.off()
+#
+#sink("www/D.tex")
+#  M <- print(xtable(D, align=rep("", ncol(D)+1),digits=0),
+#             floating=FALSE, tabular.environment="bmatrix", comment=FALSE, 
+#             print.results=FALSE,hline.after=NULL,
+#             include.rowname=FALSE,include.colname=FALSE)
+#  M
+#sink()
