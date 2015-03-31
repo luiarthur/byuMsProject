@@ -18,7 +18,7 @@ calc.settings <- function(Zs) {
   EZ11.0011
 }
 
-B <- 1e5
+B <- 1e4
 D <- matrix(9,5,5)
 diag(D) <- 0
 D[1,3] <- D[3,1] <- D[2,5] <- D[5,2] <- 1
@@ -70,10 +70,10 @@ plot.sim()
 
 # THIS IS ALSO IMPORTANT: Make sure the permuted version reduces to the IBP
 # when the observations are equidistant.
-#par(mfrow=c(2,1))
-#  a.image(round(EO,3),numbers=TRUE,main="IBP Not Permuted")
-#  a.image(round(EOp,3),numbers=TRUE,main="IBP Permuted")
-#par(mfrow=c(1,1))
+par(mfrow=c(2,1))
+  a.image(round(EO,3),numbers=TRUE,main="IBP Not Permuted")
+  a.image(round(EOp,3),numbers=TRUE,main="IBP Permuted")
+par(mfrow=c(1,1))
 
 #up <- unique.matrix(Zp)
 #which(up[[1]] > B*.001)
